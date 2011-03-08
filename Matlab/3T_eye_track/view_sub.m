@@ -108,7 +108,7 @@ else
         trial_str = sprintf('%s|%s', trial_str, trial_types{i});
     end;
     set(handles.trialPopup, 'String', trial_str);
-    
+    handles.mode = 'jointhist';
 end;
 
 % Update handles structure
@@ -128,25 +128,28 @@ function update_axis(handles)
     
     axes(handles.axes1);
     
-    mode = 'xh';
-    switch mode
-        case 'jh'    
+    switch handles.mode
+        case 'jointhist'    
             plot_joint_histogram(handles.data, sub, run);
-        case 'xh'
+        case 'xhist'
             hist(handles.data{sub}{run}.pos.xpos, 100);
-        case 'yh'
+        case 'yhist'
             hist(handles.data{sub}{run}.pos.ypos, 100);
             
         case 'pstx' % peri-stimulus timecourse
             
         case 'psty' % peri-stimulus timecourse    
             
-        case 'bf' % butterfly plot
+        case 'bfx' % butterfly plot
             
-        case 'tla'
+        case 'bfy'
+            
+        case 'tlax'
+            
+        case 'tlay'
             
         otherwise
-            error('test')
+            disp([handles.mode ' not implemented'])
     end
     % set up trial combo-thing.
     
@@ -255,4 +258,6 @@ function uipanel1_SelectionChangeFcn(hObject, eventdata, handles)
 %	OldValue: handle of the previously selected object or empty if none was selected
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
+handles.mode = get(eventdata.NewValue, 'Tag');
+guidata(hObject, handles);
 update_axis(handles);
