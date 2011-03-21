@@ -26,7 +26,7 @@ verbose = 1;
 for i=1  %:length(data)
     for j = 1  %:length(data{i})
         
-        ptime = data{i}{j}.pos.pos_time;
+        ptime = data{i}{j}.pos.time;
         srate = 1.001/30;
         time_intervals = diff(ptime);
         ideal_intervals = round(time_intervals/srate) * srate;
@@ -89,7 +89,7 @@ for i=1  %:length(data)
         % check the correction
         if exist('verbose', 'var') && verbose
             figure;
-            for k = 1:length(deviated_ind)
+            for k = 1:10
                 % plot deviated points
                 plot_range = (-4:5) + deviated_ind(k);
                 scatter(-4:5, time_intervals(plot_range));

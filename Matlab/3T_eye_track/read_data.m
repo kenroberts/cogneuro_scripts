@@ -24,7 +24,10 @@ if isempty(sav_data) ...
                 %error('Unknown text file: %s\n', input_files{i});
                  data{i} = read_txt_file(input_files{i});
             case '.xls'
-                 data{i} = xlsread(input_files{i});
+                 %data{i} = xlsread(input_files{i});
+                 data{i} = read_xls_file(input_files{i});
+                  data{i} = split_data('startandendmarkers', data{i}, ...
+                     'startmarker', 'V', 'endmarker', 'E');
             case 'xlsx'
                  data{i} = read_xls_file(input_files{i});
                  data{i} = split_data('startandendmarkers', data{i}, ...
