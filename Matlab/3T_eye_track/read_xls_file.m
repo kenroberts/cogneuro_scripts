@@ -36,6 +36,18 @@ function raw_data = read_xls_file(input_filename)
         badrows = [];
     end;
     
+    % ensure that time increases monotonically (if there is a missing
+    % 'time' value in the second column, recreate it from average of other 
+    % two columns.
+%     first_row = min([   find(xl_num(:,1) == 10, 1), ...
+%                         find(xl_num(:,1) == 12, 1), ...
+%                         find(xl_num(:,1) == 99, 1) ]);
+%     last_row  = max([   find(xl_num(:,1) == 12, 1, 'last'), ...
+%                         find(xl_num(:,1) == 12, 1, 'last'), ...
+%                         find(xl_num(:,1) == 12, 1, 'last') ]);
+%     tdiff = xl_num(first_row+1:last_row, 2) - xl_num(first_row:last_row-1, 2);
+    
+    
     % nodata (99 rows)
     choose_ind = setdiff(find(xl_num(:,1) == 99), badrows);
     nodata.row = choose_ind;

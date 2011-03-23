@@ -44,7 +44,8 @@ if nargin < 2 % get info graphically
     
     choice = menu('Please choose a method of splitting into runs:', ...
                     'Split by start marker', ...
-                    'Split by start and end markers');
+                    'Split by start and end markers', ...
+                    'Split by gaps in events');
     switch choice
         case 1
             methodname = 'splitbymarker';
@@ -58,6 +59,11 @@ if nargin < 2 % get info graphically
             answer = inputdlg(prompt, '', 1);
             options.startmarker = answer{1};
             options.endmarker = answer{2};
+            
+        case 3
+            methodname = 'nearevents';
+            answer = inputdlg('Split into runs between event-gaps of how many seconds');
+            options.interval = answer;
     end;
 
 else % try to get everything from the command line.
@@ -105,9 +111,31 @@ switch methodname
             error('Mismatched starts and ends.');
         end;
         
-        %error('not implemented yet');
     case 'nearevents'
-        error('not implemented yet');
+        tdiff = data.events.time(2:end) - data.events.time(1:end-1);
+        
+        % each event has to have a time greater than the event preceding it
+        % for violations, replace w/ nearby time.
+        errs = find(tdiff < 0) + 1;
+        for i = 1:length(errs)
+            row = data.events.row(errs(i));
+            prev_pos_row_time = data.pos.time( find(data.pos.row < row, 1, 'last'));
+            prev_nodata_row_time = data.nodata.time( find(data.nodata.row < row, 1, 'last'));
+            next_pos_row_time = data.pos.time( find(data.pos.row > row, 1));
+            next_nodata_row_time = data.nodata.time( find(data.nodata.row > row, 1));
+            
+            data.events.time(errs(i)) = mean([ max(prev_pos_row_time, prev_nodata_row_time), ...
+                min(next_pos_row_time, next_nodata_row_time) ]);
+            
+        end;
+        
+        % break up at every gap > interval
+        tdiff = data.events.time(2:end)-data.events.time(1:end-1);
+        last_time = max(max(data.pos.time(end), data.nodata.time(end)), data.events.time(end));
+        seg_starts = [data.events.time(1); data.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
+        seg_ends = [data.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
+        
+        %error('not implemented yet');
     otherwise
         error(['The method %s is not supported.  Please type\n' ...
             'help %s to find examples of usage.'], methodname, mfilename);

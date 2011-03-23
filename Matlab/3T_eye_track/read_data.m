@@ -26,13 +26,13 @@ if isempty(sav_data) ...
             case '.xls'
                  %data{i} = xlsread(input_files{i});
                  data{i} = read_xls_file(input_files{i});
-                  data{i} = split_data('startandendmarkers', data{i}, ...
-                     'startmarker', 'V', 'endmarker', 'E');
+                % data{i} = split_data('startandendmarkers', data{i}, ...
+                %     'startmarker', 'V', 'endmarker', 'E');
             case 'xlsx'
                  data{i} = read_xls_file(input_files{i});
-                 data{i} = split_data('startandendmarkers', data{i}, ...
-                     'startmarker', 'V', 'endmarker', 'E');
-                 data{i} = detrend_eye_data(data{i});
+                 %data{i} = split_data('startandendmarkers', data{i}, ...
+                 %    'startmarker', 'V', 'endmarker', 'E');
+                 %data{i} = detrend_eye_data(data{i});
             otherwise
                 error('Unknown file type: %s\n', input_files{i});
         end;
@@ -140,6 +140,8 @@ return;
 % helper subfunction to take the data as read in from xlsread or 
 % read_txt_file, and package it into a struct
 function clean_data = package_data(varargin)
+
+error('This function''s comments indicate it is obsolete.');
 
 clean_data = cell(1, length(xl_files));
 
