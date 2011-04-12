@@ -21,18 +21,11 @@ if isempty(sav_data) ...
         fprintf('Reading file %s ', input_files{i});
         switch input_files{i}(end-3:end)
             case '.txt'
-                %error('Unknown text file: %s\n', input_files{i});
                  data{i} = read_txt_file(input_files{i});
             case '.xls'
-                 %data{i} = xlsread(input_files{i});
                  data{i} = read_xls_file(input_files{i});
-                % data{i} = split_data('startandendmarkers', data{i}, ...
-                %     'startmarker', 'V', 'endmarker', 'E');
             case 'xlsx'
                  data{i} = read_xls_file(input_files{i});
-                 %data{i} = split_data('startandendmarkers', data{i}, ...
-                 %    'startmarker', 'V', 'endmarker', 'E');
-                 %data{i} = detrend_eye_data(data{i});
             otherwise
                 error('Unknown file type: %s\n', input_files{i});
         end;
