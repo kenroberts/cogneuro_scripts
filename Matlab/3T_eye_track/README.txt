@@ -6,6 +6,8 @@ eye-tracking data.
 ET struct:
 
 subject_data{}
+    -> filename(s) (not impl.) - more than one file name if runs are from 
+        different files
     -> runs{}
         -> events()  // correspond to lines marked 12 in raw file
             row, time and code
@@ -13,8 +15,8 @@ subject_data{}
             row, time
         -> pos()     // lines marked 10 (position data)
             row, time, xpos, ypos, pwidth, paspect
-    -> history
+        -> header
+            -> lines{}
+    -> history (not impl)
         -> commands{}
-    -> header
-        -> lines{}
-    -> cache
+    -> cache (not impl)

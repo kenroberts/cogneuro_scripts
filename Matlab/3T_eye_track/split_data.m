@@ -38,9 +38,12 @@ function data_out = split_data(varargin)
 %
 % runs = split_data('nearevents', data, 'interval', 5);
 
-
-
 if nargin < 2 % get info graphically
+    
+    data = varargin{1};
+    if length(data.runs) > 1
+        warning('Splitting more than one run not supported, only splitting first run.');
+    end;
     
     choice = menu('Please choose a method of splitting into runs:', ...
                     'Split by start marker', ...
@@ -65,10 +68,16 @@ if nargin < 2 % get info graphically
             answer = inputdlg('Split into runs between event-gaps of how many seconds');
             options.interval = answer;
     end;
+    
+    
 
 else % try to get everything from the command line.
     methodname = varargin{1};
     data = varargin{2};
+    
+    if length(data.runs) > 1
+        warning('Splitting more than one run not supported, only splitting first run.');
+    end;
     
     % fill "options" - a struct with fields for each option
     options = struct;
@@ -87,10 +96,10 @@ switch methodname
     
     case 'splitbymarker'
         if ~isfield(options, 'startmarker')
-            error('Please specify ''startmarker'' and ''endmarker.''');
+            error('Please specify ''startmarker''');
         end;
-        seg_starts = strcmp(data.events.code, options.startmarker);
-        seg_starts = data.events.time(seg_starts);
+        seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
+        seg_starts = data.runs{1}.events.time(seg_starts);
         seg_ends = seg_starts(2:end);
         seg_starts = seg_starts(1:end-1);
         
@@ -100,11 +109,11 @@ switch methodname
         end;
         
         % find event numbers that correspond to each start and end.
-        seg_starts = strcmp(data.events.code, options.startmarker);
-        seg_ends = strcmp(data.events.code, options.endmarker);
+        seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
+        seg_ends = strcmp(data.runs{1}.events.code, options.endmarker);
         
-        seg_starts = data.events.time(seg_starts);
-        seg_ends = data.events.time(seg_ends);
+        seg_starts = data.runs{1}.events.time(seg_starts);
+        seg_ends = data.runs{1}.events.time(seg_ends);
         
         % sanity check: equal lengths, no starts after ends.
         if length(seg_starts) ~= length(seg_ends) || any((seg_ends-seg_starts) < 0)
@@ -112,28 +121,28 @@ switch methodname
         end;
         
     case 'nearevents'
-        tdiff = data.events.time(2:end) - data.events.time(1:end-1);
+        tdiff = data.run{1}.events.time(2:end) - data.run{1}.events.time(1:end-1);
         
         % each event has to have a time greater than the event preceding it
         % for violations, replace w/ nearby time.
         errs = find(tdiff < 0) + 1;
         for i = 1:length(errs)
-            row = data.events.row(errs(i));
-            prev_pos_row_time = data.pos.time( find(data.pos.row < row, 1, 'last'));
-            prev_nodata_row_time = data.nodata.time( find(data.nodata.row < row, 1, 'last'));
-            next_pos_row_time = data.pos.time( find(data.pos.row > row, 1));
-            next_nodata_row_time = data.nodata.time( find(data.nodata.row > row, 1));
+            row = data.run{1}.events.row(errs(i));
+            prev_pos_row_time = data.runs{1}.pos.time( find(data.runs{1}.pos.row < row, 1, 'last'));
+            prev_nodata_row_time = data.run{1}.nodata.time( find(data.runs{1}.nodata.row < row, 1, 'last'));
+            next_pos_row_time = data.runs{1}.pos.time( find(data.runs{1}.pos.row > row, 1));
+            next_nodata_row_time = data.runs{1}.nodata.time( find(data.runs{1}.nodata.row > row, 1));
             
-            data.events.time(errs(i)) = mean([ max(prev_pos_row_time, prev_nodata_row_time), ...
+            data.run{1}.events.time(errs(i)) = mean([ max(prev_pos_row_time, prev_nodata_row_time), ...
                 min(next_pos_row_time, next_nodata_row_time) ]);
             
         end;
         
         % break up at every gap > interval
-        tdiff = data.events.time(2:end)-data.events.time(1:end-1);
-        last_time = max(max(data.pos.time(end), data.nodata.time(end)), data.events.time(end));
-        seg_starts = [data.events.time(1); data.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
-        seg_ends = [data.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
+        tdiff = data.runs{1}.events.time(2:end)-data.runs{1}.events.time(1:end-1);
+        last_time = max(max(data.runs{1}.pos.time(end), data.runs{1}.nodata.time(end)), data.runs{1}.events.time(end));
+        seg_starts = [data.runs{1}.events.time(1); data.run{1}.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
+        seg_ends = [data.runs{1}.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
         
         %error('not implemented yet');
     otherwise
@@ -152,29 +161,30 @@ end;
 % post switch-block requirements:
 % that seg_starts and seg_ends are equal in length, and that they 
 % mark the time corresponding to the start and end of each segment.
-data_out = cell(length(seg_starts), 1);
+runs = cell(length(seg_starts), 1);
 for i = 1:length(seg_starts)
-    choose_ind = find(data.events.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.events.time >= seg_ends(i)));
-    ev = struct('row', data.events.row(choose_ind), ...
-                'time', data.events.time(choose_ind), ...
-                'code', { data.events.code(choose_ind) });
+    choose_ind = find(data.runs{1}.events.time >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.events.time >= seg_ends(i)));
+    ev = struct('row', data.runs{1}.events.row(choose_ind), ...
+                'time', data.runs{1}.events.time(choose_ind), ...
+                'code', { data.runs{1}.events.code(choose_ind) });
             
-    choose_ind = find(data.pos.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.pos.time >= seg_ends(i)));
-    pos = struct('row', data.pos.row(choose_ind), ...
-                'time', data.pos.time(choose_ind), ...
-                'xpos', data.pos.xpos(choose_ind), ...
-                'ypos', data.pos.ypos(choose_ind), ...
-                'paspect', data.pos.pwidth(choose_ind), ...
-                'pwidth', data.pos.paspect(choose_ind) );
+    choose_ind = find(data.runs{1}.pos.time >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.pos.time >= seg_ends(i)));
+    pos = struct('row', data.runs{1}.pos.row(choose_ind), ...
+                'time', data.runs{1}.pos.time(choose_ind), ...
+                'xpos', data.runs{1}.pos.xpos(choose_ind), ...
+                'ypos', data.runs{1}.pos.ypos(choose_ind), ...
+                'paspect', data.runs{1}.pos.pwidth(choose_ind), ...
+                'pwidth', data.runs{1}.pos.paspect(choose_ind) );
     
-    choose_ind = find(data.nodata.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.nodata.time >= seg_ends(i)));
-    nodata = struct('row', data.nodata.row(choose_ind), ...
-                'time', data.nodata.time(choose_ind) );
-    data_out{i} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
+    choose_ind = find(data.runs{1}.nodata.time >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.nodata.time >= seg_ends(i)));
+    nodata = struct('row', data.runs{1}.nodata.row(choose_ind), ...
+                'time', data.runs{1}.nodata.time(choose_ind) );
+    runs{i} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
 end;
 
+data_out.runs = runs;
 
 return;

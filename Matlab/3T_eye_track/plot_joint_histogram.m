@@ -4,8 +4,8 @@ function plot_joint_histogram(clean_data, subj, run)
 % that cell array so that clean_data{subj}{run} is used to create
 % the joint 
         
-    x_data = clean_data{subj}{run}.pos.xpos;
-    y_data = clean_data{subj}{run}.pos.ypos;
+    x_data = clean_data{subj}.runs{run}.pos.xpos;
+    y_data = clean_data{subj}.runs{run}.pos.ypos;
     
     % scale + truncate data to desired range (hard coded to -1..2)
     x_data = max(min( (x_data+1)/3, 1), 0);
@@ -15,7 +15,7 @@ function plot_joint_histogram(clean_data, subj, run)
 
     % all data here should be on interval (0..1)
     jh = joint_histogram(x_data, y_data);
-    imagesc(linspace(-1,2,100), linspace(-1, 2, 100), full(jh')); axis xy;
+    imagesc(linspace(-1,2,100), linspace(-1, 2, 100), full(jh)); axis xy;
        
 return;
 

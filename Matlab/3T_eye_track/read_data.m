@@ -21,11 +21,11 @@ if isempty(sav_data) ...
         fprintf('Reading file %s ', input_files{i});
         switch input_files{i}(end-3:end)
             case '.txt'
-                 data{i} = read_txt_file(input_files{i});
+                 data{i}.runs{1} = read_txt_file(input_files{i});
             case '.xls'
-                 data{i} = read_xls_file(input_files{i});
+                 data{i}.runs{1} = read_xls_file(input_files{i});
             case 'xlsx'
-                 data{i} = read_xls_file(input_files{i});
+                 data{i}.runs{1} = read_xls_file(input_files{i});
             otherwise
                 error('Unknown file type: %s\n', input_files{i});
         end;

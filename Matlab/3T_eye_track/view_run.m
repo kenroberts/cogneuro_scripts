@@ -91,7 +91,7 @@ else
     set(handles.popupmenu1, 'String', subj_str);
     
     run_str = '1';
-    for i = 2:length(handles.data{1})
+    for i = 2:length(handles.data{1}.runs)
         run_str = sprintf('%s|%d', run_str, i);
     end;
     set(handles.popupmenu2, 'String', run_str);
@@ -137,7 +137,7 @@ function update_slider(handles)
 
 % redraw the plot
 function update_axis(handles)
-    data = handles.data{get(handles.popupmenu1, 'Value')}{get(handles.popupmenu2, 'Value')};
+    data = handles.data{get(handles.popupmenu1, 'Value')}.runs{get(handles.popupmenu2, 'Value')};
     detrend_check = [get(handles.checkbox6, 'Value'), get(handles.checkbox7, 'Value') ];
     
     start_time = min(data.pos.time(1), data.events.time(1));

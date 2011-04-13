@@ -65,16 +65,16 @@ handles.output = hObject;
 
 % easy testing with dummy data
 if length(varargin) == 0
-    global clean_data;
-    input_files = {'131.xlsx', '135.xlsx'};
-    %input_files = { '35104_1to4.xls' };
-    raw_data = read_data(input_files);
-    if length(raw_data{1}) == 1
-        clean_data = make_clean_data(input_files, raw_data);
-    else
-        clean_data = raw_data;
-    end;
-    varargin = {'filenames', input_files, 'data', clean_data};
+%     global clean_data;
+%     input_files = {'131.xlsx', '135.xlsx'};
+%     %input_files = { '35104_1to4.xls' };
+%     raw_data = read_data(input_files);
+% %     if length(raw_data{1}) == 1
+% %         clean_data = make_clean_data(input_files, raw_data);
+% %     else
+% %         clean_data = raw_data;
+% %     end;
+%    varargin = {'filenames', input_files, 'data', raw_data};
 end;
 
 % handle command line input:
@@ -97,12 +97,12 @@ else
     set(handles.subjPopup, 'String', subj_str);
     
     run_str = '1';                    % runPopup
-    for i = 2:length(handles.data{1})
+    for i = 2:length(handles.data{1}.runs)
         run_str = sprintf('%s|%d', run_str, i);
     end;
     set(handles.runPopup, 'String', run_str);
     
-    trial_types = unique(handles.data{1}{1}.events.code);
+    trial_types = unique(handles.data{1}.runs{1}.events.code);
     trial_str = trial_types{1};        % trialPopup
     for i = 2:length(trial_types)
         trial_str = sprintf('%s|%s', trial_str, trial_types{i});
@@ -132,9 +132,9 @@ function update_axis(handles)
         case 'jointhist'    
             plot_joint_histogram(handles.data, sub, run);
         case 'xhist'
-            hist(handles.data{sub}{run}.pos.xpos, 100);
+            hist(handles.data{sub}.runs{run}.pos.xpos, 100);
         case 'yhist'
-            hist(handles.data{sub}{run}.pos.ypos, 100);
+            hist(handles.data{sub}.runs{run}.pos.ypos, 100);
             
         case 'pstx' % peri-stimulus timecourse
             
