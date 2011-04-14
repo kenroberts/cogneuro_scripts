@@ -38,6 +38,11 @@ function data_out = split_data(varargin)
 %
 % runs = split_data('nearevents', data, 'interval', 5);
 
+
+% HARD-CODED: get rid of runs less than 10s or less than 300 rows (usually
+% also about 10s).
+
+
 if nargin < 2 % get info graphically
     
     data = varargin{1};
@@ -99,7 +104,8 @@ switch methodname
             error('Please specify ''startmarker''');
         end;
         seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
-        seg_starts = data.runs{1}.events.time(seg_starts);
+        seg_starts(end) = 1; % add last event as end
+        seg_starts = data.runs{1}.events.row(seg_starts);
         seg_ends = seg_starts(2:end);
         seg_starts = seg_starts(1:end-1);
         
@@ -112,8 +118,8 @@ switch methodname
         seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
         seg_ends = strcmp(data.runs{1}.events.code, options.endmarker);
         
-        seg_starts = data.runs{1}.events.time(seg_starts);
-        seg_ends = data.runs{1}.events.time(seg_ends);
+        seg_starts = data.runs{1}.events.row(seg_starts);
+        seg_ends = data.runs{1}.events.row(seg_ends);
         
         % sanity check: equal lengths, no starts after ends.
         if length(seg_starts) ~= length(seg_ends) || any((seg_ends-seg_starts) < 0)
@@ -121,6 +127,9 @@ switch methodname
         end;
         
     case 'nearevents'
+        
+        error('not implemented yet');
+        
         tdiff = data.run{1}.events.time(2:end) - data.run{1}.events.time(1:end-1);
         
         % each event has to have a time greater than the event preceding it
@@ -144,7 +153,7 @@ switch methodname
         seg_starts = [data.runs{1}.events.time(1); data.run{1}.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
         seg_ends = [data.runs{1}.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
         
-        %error('not implemented yet');
+        
     otherwise
         error(['The method %s is not supported.  Please type\n' ...
             'help %s to find examples of usage.'], methodname, mfilename);
@@ -154,15 +163,37 @@ verbose = 1;
 if verbose
     fprintf('Found %d runs.\n', length(seg_starts));
     for i = 1:length(seg_starts)
-        fprintf('\tSegment %d: %f seconds.\n', i, seg_ends(i)-seg_starts(i)); 
+        fprintf('\tSegment %d: %f rows.\n', i, seg_ends(i)-seg_starts(i)); 
     end;
 end;
 
-% post switch-block requirements:
-% that seg_starts and seg_ends are equal in length, and that they 
-% mark the time corresponding to the start and end of each segment.
+
+
+data_out.runs = split_on_rows(data, seg_starts, seg_ends);
+
+return;
+
+
+% split data by times in seg_starts, seg_ends
+% which are vectors containing times 
+% (this function will only work properly when the 
+% time values in a run increase monotonically.  That is why it is
+% deprecated in favor of splitting on row values
+function runs = split_on_time(data, seg_starts, seg_ends)
+
+% HARD-CODED: minimum length in seconds
+MIN_LENGTH_TIME = 10;
+nskip = 0;
+
 runs = cell(length(seg_starts), 1);
 for i = 1:length(seg_starts)
+    
+    if seg_ends(i)-seg_starts(i) < MIN_LENGTH_TIME
+        warning('Skipping run of only %f seconds.', seg_ends(i)-seg_starts(i));
+        nskip = nskip+1;
+        continue
+    end;
+    
     choose_ind = find(data.runs{1}.events.time >= seg_starts(i));
     choose_ind = setdiff(choose_ind, find(data.runs{1}.events.time >= seg_ends(i)));
     ev = struct('row', data.runs{1}.events.row(choose_ind), ...
@@ -181,10 +212,50 @@ for i = 1:length(seg_starts)
     choose_ind = find(data.runs{1}.nodata.time >= seg_starts(i));
     choose_ind = setdiff(choose_ind, find(data.runs{1}.nodata.time >= seg_ends(i)));
     nodata = struct('row', data.runs{1}.nodata.row(choose_ind), ...
-                'time', data.runs{1}.nodata.time(choose_ind) );
-    runs{i} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
+                'time', data.runs{1}.nodata.time(choose_ind) );       
+     
+    runs{i-nskip} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
 end;
+return;
 
-data_out.runs = runs;
+% split data by rows in seg_starts, seg_ends
+% which are vectors containing row numbers 
+function runs = split_on_rows(data, seg_starts, seg_ends)
 
+% HARD-CODED: minimum length in rows (300 ~= 10s)
+MIN_LENGTH_ROW = 300;
+nskip = 0;
+
+runs = cell(length(seg_starts), 1);
+for i = 1:length(seg_starts)
+    if seg_ends(i)-seg_starts(i) < MIN_LENGTH_ROW
+        warning('Skipping run of only %f rows.', seg_ends(i)-seg_starts(i));
+        nskip = nskip+1;
+        continue
+    end;
+    
+    choose_ind = find(data.runs{1}.events.row >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.events.row >= seg_ends(i)));
+    ev = struct('row', data.runs{1}.events.row(choose_ind), ...
+                'time', data.runs{1}.events.time(choose_ind), ...
+                'code', { data.runs{1}.events.code(choose_ind) });
+            
+    choose_ind = find(data.runs{1}.pos.row >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.pos.row >= seg_ends(i)));
+    pos = struct('row', data.runs{1}.pos.row(choose_ind), ...
+                'time', data.runs{1}.pos.time(choose_ind), ...
+                'xpos', data.runs{1}.pos.xpos(choose_ind), ...
+                'ypos', data.runs{1}.pos.ypos(choose_ind), ...
+                'paspect', data.runs{1}.pos.pwidth(choose_ind), ...
+                'pwidth', data.runs{1}.pos.paspect(choose_ind) );
+    
+    choose_ind = find(data.runs{1}.nodata.row >= seg_starts(i));
+    choose_ind = setdiff(choose_ind, find(data.runs{1}.nodata.row >= seg_ends(i)));
+    nodata = struct('row', data.runs{1}.nodata.row(choose_ind), ...
+                'time', data.runs{1}.nodata.time(choose_ind) );
+            
+            
+            
+    runs{i-nskip} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
+end;
 return;

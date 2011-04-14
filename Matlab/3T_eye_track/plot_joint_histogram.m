@@ -15,7 +15,7 @@ function plot_joint_histogram(clean_data, subj, run)
 
     % all data here should be on interval (0..1)
     jh = joint_histogram(x_data, y_data);
-    imagesc(linspace(-1,2,100), linspace(-1, 2, 100), full(jh)); axis xy;
+    imagesc(linspace(-1,2,100), linspace(-1, 2, 100), full(jh')); axis xy;
        
 return;
 
