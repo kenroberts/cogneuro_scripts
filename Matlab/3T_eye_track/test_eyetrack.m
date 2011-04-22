@@ -7,6 +7,7 @@ if (1)
     
     for i = 1:length(q)
         q{i} = split_data('splitbymarker', q{i}, 'startmarker', 'V');
+        q{i} = detrend_eye_data(q{i});
     end;
     
 else

@@ -185,7 +185,6 @@ function runs = split_on_time(data, seg_starts, seg_ends)
 MIN_LENGTH_TIME = 10;
 nskip = 0;
 
-runs = cell(length(seg_starts), 1);
 for i = 1:length(seg_starts)
     
     if seg_ends(i)-seg_starts(i) < MIN_LENGTH_TIME
@@ -216,6 +215,7 @@ for i = 1:length(seg_starts)
      
     runs{i-nskip} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
 end;
+
 return;
 
 % split data by rows in seg_starts, seg_ends
@@ -226,7 +226,6 @@ function runs = split_on_rows(data, seg_starts, seg_ends)
 MIN_LENGTH_ROW = 300;
 nskip = 0;
 
-runs = cell(length(seg_starts), 1);
 for i = 1:length(seg_starts)
     if seg_ends(i)-seg_starts(i) < MIN_LENGTH_ROW
         warning('Skipping run of only %f rows.', seg_ends(i)-seg_starts(i));

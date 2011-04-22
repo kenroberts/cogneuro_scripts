@@ -25,40 +25,40 @@ function data = detrend_eye_data(data)
 
 
 debug_fig =[];
-for i = 1:length(data)
+for i = 1:length(data.runs)
     
     % first, do a linear detrend.
-    npoints = length(data{i}.pos.row);
-    X = [ones(npoints, 1), data{i}.pos.time];
-    xbetas = X\data{i}.pos.xpos;
-    mask = abs(X*xbetas - data{i}.pos.xpos) > 1;
-    ybetas = X\data{i}.pos.ypos;
-    mask = mask | (abs(X*ybetas - data{i}.pos.ypos) > 1);
+    npoints = length(data.runs{i}.pos.row);
+    X = [ones(npoints, 1), data.runs{i}.pos.time];
+    xbetas = X\data.runs{i}.pos.xpos;
+    mask = abs(X*xbetas - data.runs{i}.pos.xpos) > 1;
+    ybetas = X\data.runs{i}.pos.ypos;
+    mask = mask | (abs(X*ybetas - data.runs{i}.pos.ypos) > 1);
     
     fprintf('\tRemoving %d rows from run %d.\n', sum(double(mask)), i);
     fprintf('\tMeans: [%1.3f, %1.3f]\n', xbetas(1), ybetas(1));
     
     % now, remove the problematic rows.
-    removed = struct('row', data{i}.pos.row(mask), ...
-        'time', data{i}.pos.time(mask), ...        
-        'xpos', data{i}.pos.xpos(mask), ...
-        'ypos', data{i}.pos.ypos(mask), ...
-        'pwidth', data{i}.pos.pwidth(mask), ...
-        'paspect', data{i}.pos.paspect(mask));
+    removed = struct('row', data.runs{i}.pos.row(mask), ...
+        'time', data.runs{i}.pos.time(mask), ...        
+        'xpos', data.runs{i}.pos.xpos(mask), ...
+        'ypos', data.runs{i}.pos.ypos(mask), ...
+        'pwidth', data.runs{i}.pos.pwidth(mask), ...
+        'paspect', data.runs{i}.pos.paspect(mask));
     
-    data{i}.pos.row = data{i}.pos.row(~mask);
-    data{i}.pos.time = data{i}.pos.time(~mask);
-    data{i}.pos.xpos = data{i}.pos.xpos(~mask);
-    data{i}.pos.ypos = data{i}.pos.ypos(~mask);
-    data{i}.pos.pwidth = data{i}.pos.pwidth(~mask);
-    data{i}.pos.paspect = data{i}.pos.paspect(~mask);
+    data.runs{i}.pos.row = data.runs{i}.pos.row(~mask);
+    data.runs{i}.pos.time = data.runs{i}.pos.time(~mask);
+    data.runs{i}.pos.xpos = data.runs{i}.pos.xpos(~mask);
+    data.runs{i}.pos.ypos = data.runs{i}.pos.ypos(~mask);
+    data.runs{i}.pos.pwidth = data.runs{i}.pos.pwidth(~mask);
+    data.runs{i}.pos.paspect = data.runs{i}.pos.paspect(~mask);
     
     % with bad rows removed, detrend again using chosen method
-    npoints = length(data{i}.pos.row);
-    X = [ones(npoints, 1), data{i}.pos.time];
-    xbetas = X\data{i}.pos.xpos;
+    npoints = length(data.runs{i}.pos.row);
+    X = [ones(npoints, 1), data.runs{i}.pos.time];
+    xbetas = X\data.runs{i}.pos.xpos;
     xdetrend = X*xbetas;
-    ybetas = X\data{i}.pos.ypos;
+    ybetas = X\data.runs{i}.pos.ypos;
     ydetrend = X*ybetas;
     
     % plot data and detrending line
@@ -69,10 +69,10 @@ for i = 1:length(data)
         end;
         figure(debug_fig);
         hold off;
-        plot(data{i}.pos.xpos, 'b')
+        plot(data.runs{i}.pos.xpos, 'b')
         hold on;
         plot(xdetrend, 'g')
-        plot(data{i}.pos.ypos, 'r')
+        plot(data.runs{i}.pos.ypos, 'r')
         plot(ydetrend, 'k');
         title('Detrending eye-tracking data')
         
@@ -81,6 +81,6 @@ for i = 1:length(data)
     
     
     % and add the detrending fields
-    data{i}.detrend = struct('method', 'linear', 'xbetas', xbetas, ...
+    data.runs{i}.detrend = struct('method', 'linear', 'xbetas', xbetas, ...
             'ybetas', ybetas, 'xpos', xdetrend - 0.5, 'ypos', ydetrend - 0.5);
 end;

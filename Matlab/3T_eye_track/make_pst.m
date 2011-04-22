@@ -1,6 +1,9 @@
 function [pst_fig, avg_fig] = make_pst(clean_data, the_code)
 % make_pst(clean_data, evt_code)
-    
+
+% hard-code a peri-stimulus interval in ms:
+PST_INTERVAL = [-0.2:0.017:0.5]
+
     pst_fig = figure;
     avg_fig = figure;
     
