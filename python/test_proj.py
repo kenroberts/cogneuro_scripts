@@ -11,6 +11,7 @@ from datetime import datetime
 # basic class to walk a directory and yield file information
 # extensions are the filetypes that FileWalker will return
 # also, prohibited directories can be added.
+# notes: does not follow symbolic links.
 class FileWalker:
 
     def __init__(self, base_path):
@@ -48,7 +49,7 @@ class FileWalker:
                 if f[-4:] in self.extensions:
                     fs = os.stat(os.path.join(curr_dir, f))
                     # fname, subdir, size, atime, ctime
-                    yield [f, d, int(fs.st_size),
+                    yield [f, curr_dir, int(fs.st_size),
                             str(datetime.fromtimestamp(fs.st_atime)),
                             str(datetime.fromtimestamp(fs.st_ctime)) ]  
 
@@ -59,7 +60,9 @@ class DBServer(BaseHTTPServer.HTTPServer):
     def __init__(*arguments):
         BaseHTTPServer.HTTPServer.__init__(*arguments[:-1])
         arguments[0].db = arguments[-1]
-        
+
+    def get_dbname(self):
+        return self.db
 
 # basic class to serve up web pages from a database
 class DBReqHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -80,6 +83,7 @@ class DBReqHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 'server_version = %s' % self.server_version,
                 'sys_version = %s' % self.sys_version,
                 'protocol_version = %s' % self.protocol_version,
+                'server database = %s' % self.server.get_dbname(),
                 '',
                 ])
         message = message + '\n'.join(dir(self))
@@ -98,7 +102,9 @@ class DBReqHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(message)
 
-
+# MODULE: FILEDB
+# creates an sqlite db that holds files and their attributes
+# by either walking a file hierarchy, or by reading from a csv.
 class FileDB:
 
     def __init__(self, dbfile):
@@ -127,13 +133,13 @@ class FileDB:
 
     def fetch_rows(self, start, number):
         c = self.conn.cursor()
-        c.execute('select * from filestats limit 10')
+        c.execute('select * from filestats limit %s' % number)
         for row in c:
             yield row
     
     def import_csv(self, csvFilename):
 
-        """Note: Windows: modified, created
+        """ Note: Windows: modified, created
                 CSV: last_access, last_change
                 Linux: accessed, modified (only file), changed (file or metadata)
         """
@@ -168,7 +174,7 @@ class FileDB:
                 Linux: accessed, modified (only file), changed (file or metadata)
         """
 
-        tag = filedir
+        tag = 'hardcoded_tag'
         ts = datetime.now()
         
         fw = FileWalker(filedir)
@@ -178,7 +184,7 @@ class FileDB:
         
         c = self.conn.cursor()
 
-        # fill db with data (skip first 6 lines of file)
+        # fill db with data 
         for entry in fw.list_generator():
             entry.insert(0, tag)
             c.execute("insert into filestats values (?,?, ?,?, ?,?)",
@@ -196,24 +202,30 @@ class FileDB:
 
 
 # switch between server, filewalker and db
-testmode = 'server'
+testmode = 'db'
     
 if __name__ == '__main__' and testmode == 'server':
     CLIENT_PORT = ('', 8000)
     '''httpd = DBServer(CLIENT_PORT,
                     DBReqHandler)'''
-    httpd = BaseHTTPServer.HTTPServer(CLIENT_PORT, DBReqHandler)
+    #httpd = BaseHTTPServer.HTTPServer(CLIENT_PORT, DBReqHandler)
+    httpd = DBServer(CLIENT_PORT, DBReqHandler, 'test.sq3')
+    print httpd.get_dbname()
     httpd.serve_forever()
 
 if __name__ == '__main__' and testmode == 'db':
     """ This program will read csv files into an
     sqlite database
     """
-    fdb = FileDB('test.sq3')
-    fdb.import_csv('allagash_txt_files.csv')
-    #fdb.import_csv('allagash_log_files.csv')
+    fdb = FileDB('test.sq3') # works
+    #fdb.import_csv('allagash_exp_files.csv' # works
+
     fdb.import_filewalk(r'c:\Documents and Settings\kroberts\Desktop\data_archive\junk_2010',
                         '.log')
+
+    # this works
+    for r in fdb.fetch_rows(1, 24):
+        print r
 
     # delete database
     fdb = None
