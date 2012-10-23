@@ -2,23 +2,30 @@
 import csv
 import sqlite3
 
-import BaseHTTPServer
-import urlparse
+import http.server
+import urllib.parse
 
 import os
 from datetime import datetime
+
+# goal: a program that will index ALL of the .cnt files, and all of the .log
+# files on a filesystem.
 
 # basic class to walk a directory and yield file information
 # extensions are the filetypes that FileWalker will return
 # also, prohibited directories can be added.
 # notes: does not follow symbolic links.
+# depends: os, datetime
 class FileWalker:
+    '''A persistent store for file metadata'''
 
     def __init__(self, base_path):
         """Takes a base path to walk for indexing."""
         self.base_path = base_path
-        self.extensions = set();
-        self.novisit = set();
+        self.extensions = set()
+        self.novisit = set()
+        self.dircount = 0
+        self.filecount = 0
         
     def add_extension(self, ext):
         """The FileWalker will collect files with certain
@@ -34,9 +41,11 @@ class FileWalker:
     def generator(self):
         for curr_dir, subdirs, files in os.walk(self.base_path):
             for d in subdirs:
+                self.filecount++
                 if d in self.novisit:
                     subdirs.remove(d)
             for f in files:
+                self.dircount++
                 if f[-4:] in self.extensions: 
                     yield '{0} in {1}'.format(f, curr_dir)
 
@@ -55,20 +64,46 @@ class FileWalker:
 
 
 # basic class to serve up web pages from a database
-class DBServer(BaseHTTPServer.HTTPServer):
-
-    def __init__(*arguments):
-        BaseHTTPServer.HTTPServer.__init__(*arguments[:-1])
-        arguments[0].db = arguments[-1]
-
+# depends: httpserver
+class DBServer(http.server.HTTPServer):
+        
+    def set_dbname(self, dbname):
+        self.db_name = dbname
+        
     def get_dbname(self):
-        return self.db
+        return self.db_name
+
 
 # basic class to serve up web pages from a database
-class DBReqHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-    
+# depends: httpserver, urllib
+class DBReqHandler(http.server.BaseHTTPRequestHandler):
+
     def do_GET(self):
-        parsed_path = urlparse.urlparse(self.path)
+        parsed_path = urllib.parse.urlparse(self.path)
+        
+        message = '''
+            <html><head><title>Simple App</title></head><body>
+            <h1>Output</h1>
+            '''
+        
+        if True:
+            # print simple table of results
+            fdb = FileDB(self.server.db_name)
+            message = message + '<table>'
+            for row in fdb.fetch_rows(1, 10):
+                message = message + '<tr><td>'
+                message = message + '</td><td>'.join(row)
+                message = message + '</td></tr>'
+            message = message + '</table>'
+            
+        
+        message = message + '</body></html>'
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(bytes(message, 'UTF-8'))
+
+    def debug_str():
         message = '\n'.join([
                 'CLIENT VALUES:',
                 'client_address = %s (%s)' % (self.client_address,
@@ -84,27 +119,15 @@ class DBReqHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 'sys_version = %s' % self.sys_version,
                 'protocol_version = %s' % self.protocol_version,
                 'server database = %s' % self.server.get_dbname(),
-                '',
                 ])
+        message = message + '\n' + 'SERVER METHODS' + '\n'
         message = message + '\n'.join(dir(self))
-        
-        if False:
-            # print simple table of results
-            #message.append('<table>')
-            #for row in fdb.fetch_rows():
-            #    message.append('<tr><td>')
-            #    message.append('</td><td>'.join(row))
-            #    message.append('</td></tr>')
-            #message.append('</table>')
-            pass
-
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(message)
+        return message
 
 # MODULE: FILEDB
 # creates an sqlite db that holds files and their attributes
 # by either walking a file hierarchy, or by reading from a csv.
+# depends: sqlite3, csv
 class FileDB:
 
     def __init__(self, dbfile):
@@ -119,7 +142,7 @@ class FileDB:
                   type='table'
                   """)
         if not c.fetchone():
-            print 'Generating table.'
+            print('Generating table.')
             c.execute("""create table filestats
                     (tag text, name text,
                     path text, size text,
@@ -162,8 +185,8 @@ class FileDB:
         # do a simple select
         c.execute('select count(*) from filestats')
 
-        print '{0} rows were imported in {1}.'.format(
-            c.fetchone(), str(datetime.now()-ts))
+        print('{0} rows were imported in {1}.'.format(
+            c.fetchone(), str(datetime.now()-ts)))
 
         c.close()
 
@@ -180,8 +203,7 @@ class FileDB:
         fw = FileWalker(filedir)
         fw.add_extension(extension)
 
-        # init database
-        
+        # init database   
         c = self.conn.cursor()
 
         # fill db with data 
@@ -195,22 +217,31 @@ class FileDB:
         # do a simple select
         c.execute('select count(*) from filestats')
 
-        print '{0} rows were imported in {1}.'.format(
-            c.fetchone(), str(datetime.now()-ts))
+        print('{0} rows were imported in {1}.'.format(
+            c.fetchone(), str(datetime.now()-ts)))
 
         c.close()
 
+# parse important properties from a presentation logfile
+#
+test = '''def class PresLogfileReader:
 
-# switch between server, filewalker and db
-testmode = 'db'
+    def __init__(*arguments)
+        fh = fopen(arguments[0])
+        close(fh)'''
+
+
+# switch between server, filewalker and db, logfile
+testmode = 'server'
     
 if __name__ == '__main__' and testmode == 'server':
     CLIENT_PORT = ('', 8000)
     '''httpd = DBServer(CLIENT_PORT,
                     DBReqHandler)'''
     #httpd = BaseHTTPServer.HTTPServer(CLIENT_PORT, DBReqHandler)
-    httpd = DBServer(CLIENT_PORT, DBReqHandler, 'test.sq3')
-    print httpd.get_dbname()
+    httpd = DBServer(CLIENT_PORT, DBReqHandler)
+    httpd.set_dbname('test.sq3')
+    print('DB name:' + httpd.get_dbname())
     httpd.serve_forever()
 
 if __name__ == '__main__' and testmode == 'db':
@@ -225,7 +256,7 @@ if __name__ == '__main__' and testmode == 'db':
 
     # this works
     for r in fdb.fetch_rows(1, 24):
-        print r
+        print(r)
 
     # delete database
     fdb = None
@@ -235,4 +266,8 @@ if __name__ == "__main__" and testmode == 'filewalker':
     fw = FileWalker(base_path)
     fw.add_extension('.log')
     for s in fw.list_generator():
-        print s
+        print(s)
+
+if __name == "__main__" and testmode == 'logfile':
+    pres_logfile = PresLogfileReader('test.log')
+    
