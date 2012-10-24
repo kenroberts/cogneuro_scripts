@@ -1,5 +1,5 @@
 function data = detrend_eye_data(data)
-% detrends eye-tracking data
+% detrends eye-tracking data (only linear for now)
 %
 % data = detrend_eye_data(data) will 
 %

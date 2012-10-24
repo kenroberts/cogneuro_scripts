@@ -10,6 +10,9 @@ if (1)
         q{i} = detrend_eye_data(q{i});
     end;
     
+    view_run('filenames', {'35104_1to4.xls', '35124_1to4.xls'}, 'data', q);
+    view_sub('filenames', {'35104_1to4.xls', '35124_1to4.xls'}, 'data', q);
+    
 else
     
     q = read_data({'131.xlsx', '135.xlsx'});
