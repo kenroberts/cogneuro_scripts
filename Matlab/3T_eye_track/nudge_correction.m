@@ -24,9 +24,9 @@ function data = nudge_correction(data)
 
 verbose = 1;
 for i=1  %:length(data)
-    for j = 1  %:length(data{i})
+    for j = 2  %:length(data{i})
         
-        ptime = data{i}{j}.pos.time;
+        ptime = data{i}.runs{j}.pos.time;
         srate = 1.001/30;
         time_intervals = diff(ptime);
         ideal_intervals = round(time_intervals/srate) * srate;
@@ -116,9 +116,10 @@ for i=1  %:length(data)
         ideal_intervals2 = round(time_intervals2/srate) * srate;
         resid2 = time_intervals2-ideal_intervals2;
         
-        figure; scatter(resid2(2:end), resid2(1:end-1)); title('Serial correlations in ISI');
-        figure; plot(ptime(2:end)-ptime(1:end-1)); hold on; plot(ptime2(2:end)-ptime2(1:end-1), 'r');
-        figure; plot(ptime-ptime2); title('Cumulative time shift');
+        
+        figure; subplot(1, 3, 1); scatter(resid2(2:end), resid2(1:end-1)); title('Serial correlations in ISI');
+        subplot(1, 3, 2); plot(ptime(2:end)-ptime(1:end-1)); hold on; plot(ptime2(2:end)-ptime2(1:end-1), 'r');
+        subplot(1, 3, 3); plot(ptime-ptime2); title('Cumulative time shift');
     end;
 end;
 return;

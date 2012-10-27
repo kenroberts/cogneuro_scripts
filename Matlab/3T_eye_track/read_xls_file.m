@@ -26,6 +26,13 @@ function raw_data = read_xls_file(input_filename)
 % data.history
 % 
 
+% todo:
+%    four criteria used to reject rows:
+%       1- too many fields for that row type
+%       2- row types other than 3, 12, 10, 99
+%       3- too great a z-score difference on pos
+%       4- non-monotonic increase of time
+
     [xl_num, xl_str] = xlsread(input_filename);
     
     % sometimes acquisition stutters and records things twice, shifting
@@ -48,12 +55,12 @@ function raw_data = read_xls_file(input_filename)
 %     tdiff = xl_num(first_row+1:last_row, 2) - xl_num(first_row:last_row-1, 2);
     
     
-    % nodata (99 rows)
+    % nodata (99 rows) (have 
     choose_ind = setdiff(find(xl_num(:,1) == 99), badrows);
     nodata.row = choose_ind;
     nodata.time = xl_num(choose_ind, 2);
     
-    % events (12 rows)
+    % events (12 rows, 3 cols)
     choose_ind = setdiff(find(xl_num(:,1) == 12), badrows);
     events.row = choose_ind;
     events.time = xl_num(choose_ind, 2);
@@ -62,7 +69,7 @@ function raw_data = read_xls_file(input_filename)
     temp_isnan = isnan(xl_num(choose_ind, 3));
     events.code(temp_isnan)= temp_str(temp_isnan);
     
-    % position (10 rows): TotalTime(2), DeltaTime(3),
+    % position (10 rows, 10 cols): TotalTime(2), DeltaTime(3),
     % X_Gaze(4), Y_Gaze(5), Region(6), PupilWidth(7),
     % PupilAspect(8), Count(9), Torsion(10)
     choose_ind = setdiff(find(xl_num(:,1) == 10), badrows);
@@ -83,6 +90,10 @@ function raw_data = read_xls_file(input_filename)
 %             elseif ~isempty(xl_num(i,j)
 %                 
 %     end;
+
+    % 2 rows: other?
+    % 3 rows: 2 cols, after first col, all in string.
+    % 99 rows: 4 cols, 
     raw_data = struct('events', events, 'pos', pos, 'nodata', nodata);
 
 return;

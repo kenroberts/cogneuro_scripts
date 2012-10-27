@@ -8,13 +8,16 @@
                             
 %   read_xls_file         - NOTE: the canonical form of data should be very similar to what
 
-%   read_txt_file         - no longer puts data in proper struct (only
-%   hands back big array.
+%   read_txt_file         - doesn't really work- needs to put things in
+%   struct
 
 
-%   detrend_eye_data      - detrends eye-tracking data
+%   detrend_eye_data      - detrends eye-tracking data (linear)
+
 %   dump_png_or_gif       - makes a 256 color png or gif out of the current figure.
+
 %   est_quality           - est_quality(xl_files, subj_xl_data)
+
 %   make_pst              - make_pst(clean_data, evt_code)
 %   nudge_correction      - nudge_correction(data)
 %   plot_joint_histogram  - PLOT_JOINT_HISTOGRAM(clean_data, subj, run)
