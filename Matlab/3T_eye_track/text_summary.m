@@ -1,7 +1,13 @@
-function descrip = text_summary(data)
-% creates text summary of a single subject's eyetrack data
+function descrip = text_summary(varargin)
+% creates text summary of eyetrack data
+% attaches it to the struct
+% 
 %
 % Ken roberts
+
+% see if only a single struct is passed in (from one sub) or
+% a cell-array of structs.
+if isstruct(varargin{1}) && isfield(varargin{1}, 'runs
 
 descrip = {};
 

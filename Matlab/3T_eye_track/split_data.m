@@ -43,10 +43,14 @@ function data_out = split_data(varargin)
 % also about 10s).
 
 
+% print informative message to screen?
+verbose = 1;
+
+
 if nargin < 2 % get info graphically
     
-    data = varargin{1};
-    if length(data.runs) > 1
+    data_out = varargin{1};
+    if length(data_out.runs) > 1
         warning('Splitting more than one run not supported, only splitting first run.');
     end;
     
@@ -78,9 +82,9 @@ if nargin < 2 % get info graphically
 
 else % try to get everything from the command line.
     methodname = varargin{1};
-    data = varargin{2};
+    data_out = varargin{2};
     
-    if length(data.runs) > 1
+    if length(data_out.runs) > 1
         warning('Splitting more than one run not supported, only splitting first run.');
     end;
     
@@ -103,9 +107,9 @@ switch methodname
         if ~isfield(options, 'startmarker')
             error('Please specify ''startmarker''');
         end;
-        seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
+        seg_starts = strcmp(data_out.runs{1}.events.code, options.startmarker);
         seg_starts(end) = 1; % add last event as end
-        seg_starts = data.runs{1}.events.row(seg_starts);
+        seg_starts = data_out.runs{1}.events.row(seg_starts);
         seg_ends = seg_starts(2:end);
         seg_starts = seg_starts(1:end-1);
         
@@ -115,11 +119,11 @@ switch methodname
         end;
         
         % find event numbers that correspond to each start and end.
-        seg_starts = strcmp(data.runs{1}.events.code, options.startmarker);
-        seg_ends = strcmp(data.runs{1}.events.code, options.endmarker);
+        seg_starts = strcmp(data_out.runs{1}.events.code, options.startmarker);
+        seg_ends = strcmp(data_out.runs{1}.events.code, options.endmarker);
         
-        seg_starts = data.runs{1}.events.row(seg_starts);
-        seg_ends = data.runs{1}.events.row(seg_ends);
+        seg_starts = data_out.runs{1}.events.row(seg_starts);
+        seg_ends = data_out.runs{1}.events.row(seg_ends);
         
         % sanity check: equal lengths, no starts after ends.
         if length(seg_starts) ~= length(seg_ends) || any((seg_ends-seg_starts) < 0)
@@ -130,28 +134,28 @@ switch methodname
         
         error('not implemented yet');
         
-        tdiff = data.run{1}.events.time(2:end) - data.run{1}.events.time(1:end-1);
+        tdiff = data_out.run{1}.events.time(2:end) - data_out.run{1}.events.time(1:end-1);
         
         % each event has to have a time greater than the event preceding it
         % for violations, replace w/ nearby time.
         errs = find(tdiff < 0) + 1;
         for i = 1:length(errs)
-            row = data.run{1}.events.row(errs(i));
-            prev_pos_row_time = data.runs{1}.pos.time( find(data.runs{1}.pos.row < row, 1, 'last'));
-            prev_nodata_row_time = data.run{1}.nodata.time( find(data.runs{1}.nodata.row < row, 1, 'last'));
-            next_pos_row_time = data.runs{1}.pos.time( find(data.runs{1}.pos.row > row, 1));
-            next_nodata_row_time = data.runs{1}.nodata.time( find(data.runs{1}.nodata.row > row, 1));
+            row = data_out.run{1}.events.row(errs(i));
+            prev_pos_row_time = data_out.runs{1}.pos.time( find(data_out.runs{1}.pos.row < row, 1, 'last'));
+            prev_nodata_row_time = data_out.run{1}.nodata.time( find(data_out.runs{1}.nodata.row < row, 1, 'last'));
+            next_pos_row_time = data_out.runs{1}.pos.time( find(data_out.runs{1}.pos.row > row, 1));
+            next_nodata_row_time = data_out.runs{1}.nodata.time( find(data_out.runs{1}.nodata.row > row, 1));
             
-            data.run{1}.events.time(errs(i)) = mean([ max(prev_pos_row_time, prev_nodata_row_time), ...
+            data_out.run{1}.events.time(errs(i)) = mean([ max(prev_pos_row_time, prev_nodata_row_time), ...
                 min(next_pos_row_time, next_nodata_row_time) ]);
             
         end;
         
         % break up at every gap > interval
-        tdiff = data.runs{1}.events.time(2:end)-data.runs{1}.events.time(1:end-1);
-        last_time = max(max(data.runs{1}.pos.time(end), data.runs{1}.nodata.time(end)), data.runs{1}.events.time(end));
-        seg_starts = [data.runs{1}.events.time(1); data.run{1}.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
-        seg_ends = [data.runs{1}.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
+        tdiff = data_out.runs{1}.events.time(2:end)-data_out.runs{1}.events.time(1:end-1);
+        last_time = max(max(data_out.runs{1}.pos.time(end), data_out.runs{1}.nodata.time(end)), data_out.runs{1}.events.time(end));
+        seg_starts = [data_out.runs{1}.events.time(1); data_out.run{1}.events.time(find(tdiff > options.interval) + 1) + 0.5*options.interval ]; 
+        seg_ends = [data_out.runs{1}.events.time(find(tdiff > options.interval)-1) - 0.5*options.interval; last_time ];
         
         
     otherwise
@@ -159,17 +163,19 @@ switch methodname
             'help %s to find examples of usage.'], methodname, mfilename);
 end; % switch
 
-verbose = 1;
+% do the splitting
+data_out.runs = split_on_rows(data_out, seg_starts, seg_ends);
+
+% print summary
 if verbose
     fprintf('Found %d runs.\n', length(seg_starts));
-    for i = 1:length(seg_starts)
-        fprintf('\tSegment %d: %f rows.\n', i, seg_ends(i)-seg_starts(i)); 
+    for i = 1:length(data_out.runs)
+        tstart = min([data_out.runs{i}.pos.time(1), data_out.runs{i}.nodata.time(1), data_out.runs{i}.events.time(1)]);
+        tend = max([data_out.runs{i}.pos.time(end), data_out.runs{i}.nodata.time(end), data_out.runs{i}.events.time(end)]);
+        fprintf('\tSegment %d: %.2f s\n', i, tend-tstart); 
     end;
 end;
 
-
-
-data_out.runs = split_on_rows(data, seg_starts, seg_ends);
 
 return;
 

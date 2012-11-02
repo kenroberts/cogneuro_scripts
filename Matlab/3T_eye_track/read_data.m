@@ -25,12 +25,13 @@ if isempty(sav_data) ...
             case '.txt'
                  data{i}.runs{1} = read_txt_file(input_files{i});
             case '.xls'
-                 data{i}.runs{1} = read_xls_file(input_files{i});
+                 data{i} = read_xls_file(input_files{i});
             case 'xlsx'
-                 data{i}.runs{1} = read_xls_file(input_files{i});
+                 data{i} = read_xls_file(input_files{i});
             otherwise
                 error('Unknown file type: %s\n', input_files{i});
         end;
+        data{i}.filename = input_files{i};
         fprintf('in %f seconds.\n', toc);
     end;
     sav_data.data = data;

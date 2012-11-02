@@ -81,19 +81,29 @@ function raw_data = read_xls_file(input_filename)
     pos.paspect = xl_num(choose_ind, 8);
     
     % IGNORE headers for now. (string data)
-%     good_ind = find(xl_num(:,1) == 3);
-%     header.lines = cell(length(good_ind), 1);
-%     for i = good_ind
-%         for j = 1:size(xl_num, 2);
-%             if isnum(xl_num(i,j))
-%                 header.lines{i} = 
-%             elseif ~isempty(xl_num(i,j)
-%                 
-%     end;
+     choose_ind = find(xl_num(:,1) == 3);
+     header = cell(length(choose_ind), 1);
+     
+     for i = 1:length(choose_ind)
+        header{i} = '';
+        % iterate thru cols
+        num_cols = min(size(xl_num, 2), size(xl_str, 2));
+        for j = 1:num_cols
+             
+             if isnan(xl_num(choose_ind(i), j))
+                header{i} = sprintf('%s\t%s', header{i}, xl_str{choose_ind(i), j});
+             else
+                header{i} = sprintf('%s\t%s', header{i}, num2str(xl_num(choose_ind(i), j)));
+             end;
+        end;
+        
+     end;
 
     % 2 rows: other?
     % 3 rows: 2 cols, after first col, all in string.
     % 99 rows: 4 cols, 
-    raw_data = struct('events', events, 'pos', pos, 'nodata', nodata);
+    raw_data.header = header;
+    raw_data.runs{1} = struct('events', events, 'pos', pos, 'nodata', nodata);
+    %raw_data = struct('events', events, 'pos', pos, 'nodata', nodata);
 
 return;

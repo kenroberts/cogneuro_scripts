@@ -34,12 +34,13 @@ for i=1  %:length(data)
         
         if exist('verbose', 'var') && verbose
             % residuals against time
-            plot(resid);
+            figure; subplot(1, 2, 1);
+            plot(resid); title('Deviation between ideal and exact time intervals');
             
             % serial correlation graph
-            figure; scatter(resid(2:end)*1000, resid(1:end-1)*1000); title('Serial correlations in ISI');
-            xlabel('Deviation from ideal timestamp on current point (ms)');
-            ylabel('Deviation from ideal timestamp on previous point (ms)');
+            subplot(1, 2, 2); scatter(resid(2:end)*1000, resid(1:end-1)*1000); title('Serial correlations in ISI');
+            xlabel('Deviation of current point (ms)');
+            ylabel('Deviation of previous point (ms)');
             hold on;
             fprintf('Notice all timepoints on the diagonal.  These are all points where\n');
             fprintf('a short lag is followed by a long lag, or vice-versa, and the lags \n');
@@ -89,7 +90,8 @@ for i=1  %:length(data)
         % check the correction
         if exist('verbose', 'var') && verbose
             figure;
-            for k = 1:10
+            num_pts_plot = min(10, numel(deviated_ind));
+            for k = 1:num_pts_plot
                 % plot deviated points
                 plot_range = (-4:5) + deviated_ind(k);
                 scatter(-4:5, time_intervals(plot_range));
