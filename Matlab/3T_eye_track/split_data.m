@@ -126,6 +126,9 @@ switch methodname
         seg_ends = data_out.runs{1}.events.row(seg_ends);
         
         % sanity check: equal lengths, no starts after ends.
+        % (if there is a false start- a run starts, then is stopped early
+        % for some reason, and then continues again, there may be extra
+        % start markers)
         if length(seg_starts) ~= length(seg_ends) || any((seg_ends-seg_starts) < 0)
             error('Mismatched starts and ends.');
         end;
