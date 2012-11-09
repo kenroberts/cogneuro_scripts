@@ -21,6 +21,10 @@ class Main(QtGui.QMainWindow):
         self.ui=Ui_MainWindow()
         self.ui.setupUi(self)
 
+    def showApplication(self):
+        self.show()
+        
+
 # directory watcher
 class DirWatcher:
     def __init__(self):
@@ -36,13 +40,26 @@ def main():
     app = QtGui.QApplication(sys.argv)
     app.setApplicationName('Xfer Data Demon')
 
-    # systray icon, TODO add context menu
-    # app_icon = QtGui.QIcon(':/resource/icons/important.png')
-    # systray_icon = QtGui.QSystemTrayIcon(app_icon, app)
-    # systray_icon.show();
-    
     window=Main()
-    window.show()
+    # window.show()
+
+    # context menu for systray
+    app_icon = QtGui.QIcon(':/resource/icons/important.png')
+    systray_icon = QtGui.QSystemTrayIcon(app_icon, window)
+    systray_menu = QtGui.QMenu(window)
+    # systray_menu.setTitle("Foo")
+    showAction = systray_menu.addAction('Show Application') # QtGui.QAction('Show Application')
+    showAction.triggered.connect(window.showApplication)
+    systray_icon.setContextMenu(systray_menu)
+    systray_icon.show()
+    
+    # systray icon, TODO add context menu
+    # 
+    # 
+    # 
+    
+    
+    
 
     
 
