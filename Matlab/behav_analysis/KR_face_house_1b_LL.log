@@ -1,0 +1,329 @@
+Scenario - face_house_1b_LL
+Logfile written - 7/3/2006 5:07:00 PM
+
+Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur
+
+1	Picture	fixation	64424	0	1	10793	2	0	next
+2	Picture	43	75217	0	1	1328	3	0	next
+3	Picture	fixation	76545	0	2	11125	4	0	next
+4	Picture	43	87670	0	2	1328	4	0	next
+5	Picture	fixation	88998	0	2	11125	4	0	next
+6	Picture	43	100123	0	2	1495	3	0	next
+7	Picture	fixation	101618	0	1	11125	2	0	next
+8	Picture	43	112743	0	1	1328	3	0	next
+9	Picture	fixation	114071	0	2	11457	4	0	next
+10	Picture	44	125528	0	2	1163	3	0	next
+11	Picture	fixation	126691	0	1	10958	3	0	next
+12	Picture	41	137649	0	2	1495	3	0	next
+13	Picture	fixation	139144	0	1	10959	2	0	next
+14	Response	200	141939	-8164	1095
+14	Response	200	141939	-8164	1095
+14	Picture	43	150103	0	1	1328	3	0	next
+15	Picture	fixation	151431	0	2	11291	4	0	next
+16	Picture	44	162722	0	2	1993	3	0	next
+17	Picture	fixation	164715	0	1	10461	2	0	next
+18	Picture	44	175176	0	1	1293	941	0	next
+19	Picture	fixation	176469	0	940	11492	942	0	next
+20	Picture	42	187961	0	2	996	4	0	next
+21	Picture	fixation	188957	0	2	11457	4	0	next
+22	Response	201	191937	-8477	940
+22	Response	201	193187	-7227	941
+22	Picture	44	200414	0	2	997	3	0	next
+23	Picture	fixation	201411	0	1	11623	2	0	next
+24	Picture	43	213034	0	1	996	2	0	next
+25	Picture	fixation	214030	0	1	11457	3	0	next
+26	Picture	fixation	225487	0	2	1162	4	0	next
+27	Picture	fixation	226649	0	2	10959	4	0	next
+28	Picture	44	237608	0	2	1329	3	0	next
+29	Picture	fixation	238937	0	1	12121	2	0	next
+30	Picture	fixation	251058	0	1	498	2	0	next
+31	Picture	fixation	251556	0	1	11291	3	0	next
+32	Picture	44	262847	0	2	1162	4	0	next
+33	Picture	fixation	264009	0	2	11623	4	0	next
+34	Picture	fixation	275632	0	2	997	3	0	next
+35	Picture	fixation	276629	0	1	11457	2	0	next
+36	Picture	42	288086	0	1	1328	3	0	next
+37	Picture	fixation	289414	0	2	11623	4	0	next
+38	Response	200	292559	-8478	939
+38	Picture	fixation	301037	0	2	1329	3	0	next
+39	Picture	fixation	302366	0	1	10294	3	0	next
+40	Picture	44	312660	0	2	2159	3	0	next
+41	Picture	fixation	314819	0	1	11291	2	0	next
+42	Picture	44	326110	0	1	1328	3	0	next
+43	Picture	fixation	327438	0	2	10627	4	0	next
+44	Picture	43	338065	0	2	1329	3	0	next
+45	Picture	fixation	339394	0	1	10792	3	0	next
+46	Picture	fixation	350186	0	2	1329	3	0	next
+47	Picture	fixation	351515	0	1	11125	2	0	next
+48	Picture	43	362640	0	1	1660	3	0	next
+49	Picture	fixation	364300	0	2	10959	4	0	next
+50	Picture	44	375259	0	2	1328	4	0	next
+51	Picture	fixation	376587	0	2	11458	3	0	next
+52	Picture	42	388045	0	1	1328	2	0	next
+53	Picture	fixation	389373	0	1	10793	2	0	next
+54	Response	200	392400	-7766	939
+54	Picture	41	400166	0	1	1328	3	0	next
+55	Picture	fixation	401494	0	2	11457	4	0	next
+56	Response	200	404756	-8195	2
+56	Response	200	405681	-7270	938
+56	Picture	42	412951	0	2	1329	3	0	next
+57	Picture	fixation	414280	0	1	11457	2	0	next
+58	Response	200	417713	-8024	3
+58	Picture	44	425737	0	1	1328	3	0	next
+59	Picture	fixation	427065	0	2	10627	3	0	next
+60	Picture	41	437692	0	1	2158	3	0	next
+61	Picture	fixation	439850	0	2	10295	4	0	next
+62	Response	200	442909	-7236	2
+62	Picture	44	450145	0	2	1495	3	0	next
+63	Picture	fixation	451640	0	1	10959	2	0	next
+64	Picture	41	462599	0	1	1328	2	0	next
+65	Picture	fixation	463927	0	1	11291	3	0	next
+66	Response	200	466772	-8446	940
+66	Response	200	466772	-8446	940
+66	Picture	44	475218	0	2	1328	4	0	next
+67	Picture	fixation	476546	0	2	11956	5	0	next
+68	Picture	44	488502	0	3	1328	4	0	next
+69	Picture	fixation	489830	0	1	10295	2	0	next
+70	Picture	43	500125	0	1	1328	2	0	next
+71	Picture	fixation	501453	0	1	11291	3	0	next
+72	Picture	fixation	512744	0	2	1328	4	0	next
+73	Picture	fixation	514072	0	2	11291	4	0	next
+74	Picture	43	525363	0	2	1163	3	0	next
+75	Picture	fixation	526526	0	1	11291	2	0	next
+76	Picture	43	537817	0	1	1162	3	0	next
+77	Picture	fixation	538979	0	2	11457	4	0	next
+78	Picture	43	550436	0	2	996	4	0	next
+79	Picture	fixation	551432	0	2	11457	5	0	next
+80	Picture	44	562889	0	3	1163	4	0	next
+81	Picture	fixation	564052	0	1	11125	2	0	next
+82	Picture	44	575177	0	1	1328	3	0	next
+83	Picture	fixation	576505	0	2	11125	4	0	next
+84	Picture	fixation	587630	0	2	2159	3	0	next
+85	Picture	fixation	589789	0	1	10294	4	0	next
+86	Picture	43	600083	0	3	1329	4	0	next
+87	Picture	fixation	601412	0	1	11457	2	0	next
+88	Picture	43	612869	0	1	1328	3	0	next
+89	Picture	fixation	614197	0	2	11457	4	0	next
+90	Picture	44	625654	0	2	1163	3	0	next
+91	Picture	fixation	626817	0	1	11623	2	0	next
+92	Picture	44	638440	0	1	1162	3	0	next
+93	Picture	fixation	639602	0	2	11291	4	0	next
+94	Picture	43	650893	0	2	1328	4	0	next
+95	Picture	fixation	652221	0	2	10627	4	0	next
+96	Picture	44	662848	0	2	1163	3	0	next
+97	Picture	fixation	664011	0	1	11623	2	0	next
+98	Picture	fixation	675634	0	1	1162	2	0	next
+99	Picture	fixation	676796	0	1	11623	3	0	next
+100	Picture	43	688419	0	2	1162	4	0	next
+101	Picture	fixation	689581	0	2	10627	4	0	next
+102	Picture	42	700208	0	2	1329	3	0	next
+103	Picture	fixation	701537	0	1	11125	2	0	next
+104	Picture	44	712662	0	1	1328	2	0	next
+105	Picture	fixation	713990	0	1	11125	2	0	next
+106	Picture	44	725115	0	1	1328	3	0	next
+107	Picture	fixation	726443	0	2	11789	4	0	next
+108	Response	200	728014	-10218	941
+108	Picture	43	738232	0	2	1329	3	0	next
+109	Picture	fixation	739561	0	1	10627	2	0	next
+110	Picture	44	750188	0	1	1328	3	0	next
+111	Picture	fixation	751516	0	2	11125	4	0	next
+112	Picture	fixation	762641	0	2	1494	5	0	next
+113	Picture	fixation	764135	0	3	10959	6	0	next
+114	Picture	43	775094	0	3	1827	4	0	next
+115	Picture	fixation	776921	0	1	10793	2	0	next
+116	Picture	43	787714	0	1	1236	941	0	next
+117	Picture	fixation	788950	0	940	11217	942	0	next
+118	Picture	fixation	800167	0	2	1282	943	0	next
+119	Picture	fixation	801449	0	941	11171	943	0	next
+120	Picture	43	812620	0	2	1329	4	0	next
+121	Picture	fixation	813949	0	2	11456	5	0	next
+122	Picture	fixation	825405	0	3	1163	5	0	next
+123	Picture	fixation	826568	0	2	11125	4	0	next
+124	Picture	44	837693	0	2	1328	4	0	next
+125	Picture	fixation	839021	0	2	11125	4	0	next
+126	Picture	fixation	850146	0	2	1329	3	0	next
+127	Picture	fixation	851475	0	1	11124	4	0	next
+128	Picture	44	862599	0	3	1329	5	0	next
+129	Picture	fixation	863928	0	2	11291	4	0	next
+130	Picture	43	875219	0	2	1329	3	0	next
+131	Picture	fixation	876548	0	1	11124	3	0	next
+132	Picture	43	887672	0	2	1329	3	0	next
+133	Picture	fixation	889001	0	1	11125	2	0	next
+134	Picture	fixation	900126	0	1	1320	941	0	next
+135	Picture	fixation	901446	0	940	11299	942	0	next
+136	Picture	43	912745	0	2	1329	3	0	next
+137	Picture	fixation	914074	0	1	11125	2	0	next
+138	Picture	44	925199	0	1	1328	2	0	next
+139	Picture	fixation	926527	0	1	11125	2	0	next
+140	Picture	fixation	937652	0	1	1328	3	0	next
+141	Picture	fixation	938980	0	2	11623	4	0	next
+142	Picture	41	950603	0	2	831	3	0	next
+143	Picture	fixation	951434	0	1	11291	2	0	next
+144	Response	200	955863	-6862	3
+144	Picture	42	962725	0	1	1328	3	0	next
+145	Picture	fixation	964053	0	2	11291	4	0	next
+146	Response	200	966757	-8587	783
+146	Picture	41	975344	0	2	1162	4	0	next
+147	Picture	fixation	976506	0	2	11125	4	0	next
+148	Response	200	980038	-7593	941
+148	Picture	43	987631	0	2	1329	3	0	next
+149	Picture	fixation	988960	0	1	11623	2	0	next
+150	Picture	43	1000583	0	1	830	2	0	next
+151	Picture	fixation	1001413	0	1	11955	3	0	next
+152	Picture	fixation	1013368	0	2	664	4	0	next
+153	Picture	fixation	1014032	0	2	11790	3	0	next
+154	Picture	43	1025822	0	1	664	2	0	next
+155	Picture	fixation	1026486	0	1	12121	3	0	next
+156	Picture	42	1038607	0	2	332	4	0	next
+157	Picture	fixation	1038939	0	2	12121	4	0	next
+158	Response	200	1043786	-7274	939
+158	Picture	fixation	1051060	0	2	498	4	0	next
+159	Picture	fixation	1051558	0	2	11790	3	0	next
+160	Picture	fixation	1063348	0	1	664	2	0	next
+161	Picture	fixation	1064012	0	1	11125	2	0	next
+162	Picture	44	1075137	0	1	1328	3	0	next
+163	Picture	fixation	1076465	0	2	11125	4	0	next
+164	Picture	fixation	1087590	0	2	1328	4	0	next
+165	Picture	fixation	1088918	0	2	11292	3	0	next
+166	Picture	44	1100210	0	1	1494	2	0	next
+167	Picture	fixation	1101704	0	1	11291	2	0	next
+168	Picture	fixation	1112995	0	1	1162	4	0	next
+169	Picture	fixation	1114157	0	3	11955	5	0	next
+170	Picture	fixation	1126112	0	2	1163	5	0	next
+171	Picture	fixation	1127275	0	3	10461	4	0	next
+172	Picture	41	1137736	0	1	1203	628	0	next
+173	Picture	fixation	1138939	0	627	11416	629	0	next
+174	Response	200	1142689	-7666	939
+174	Picture	fixation	1150355	0	2	1162	4	0	next
+175	Picture	fixation	1151517	0	2	11291	4	0	next
+176	Picture	43	1162808	0	2	1130	317	0	next
+177	Picture	fixation	1163938	0	315	11157	317	0	next
+178	Picture	43	1175095	0	2	1329	3	0	next
+179	Picture	fixation	1176424	0	1	11291	3	0	next
+180	Picture	fixation	1187715	0	2	1328	4	0	next
+181	Picture	fixation	1189043	0	2	11125	4	0	next
+182	Picture	44	1200168	0	2	1329	3	0	next
+183	Picture	fixation	1201497	0	1	12121	2	0	next
+184	Picture	fixation	1213618	0	1	1162	4	0	next
+185	Picture	fixation	1214780	0	3	10461	5	0	next
+186	Picture	fixation	1225241	0	2	1328	4	0	next
+187	Picture	fixation	1226569	0	2	11125	4	0	next
+188	Picture	44	1237694	0	2	1495	3	0	next
+189	Picture	fixation	1239189	0	1	10959	2	0	next
+190	Picture	43	1250148	0	1	1826	3	0	next
+191	Picture	fixation	1251974	0	2	10627	3	0	next
+192	Picture	fixation	1262601	0	1	1826	3	0	next
+193	Picture	fixation	1264427	0	2	10793	4	0	next
+194	Picture	41	1275220	0	2	2159	4	0	next
+195	Picture	fixation	1277379	0	2	10295	3	0	next
+196	Response	200	1278778	-8896	939
+196	Picture	42	1287674	0	1	1328	3	0	next
+197	Picture	fixation	1289002	0	2	11124	5	0	next
+198	Response	200	1292607	-7519	3
+198	Picture	fixation	1300126	0	3	1329	5	0	next
+199	Picture	fixation	1301455	0	2	12122	3	0	next
+200	Picture	fixation	1313577	0	1	498	2	0	next
+201	Picture	fixation	1314075	0	1	11125	2	0	next
+202	Picture	43	1325200	0	1	1328	3	0	next
+203	Picture	fixation	1326528	0	2	11789	4	0	next
+204	Picture	43	1338317	0	2	664	4	0	next
+205	Picture	fixation	1338981	0	2	11624	3	0	next
+206	Picture	44	1350605	0	1	830	2	0	next
+207	Picture	fixation	1351435	0	1	11789	2	0	next
+208	Picture	41	1363224	0	1	830	3	0	next
+209	Picture	fixation	1364054	0	2	11955	4	0	next
+210	Response	200	1368755	-7254	2
+210	Picture	44	1376009	0	2	499	3	0	next
+211	Picture	fixation	1376508	0	1	11123	4	0	next
+212	Picture	43	1387631	0	3	1330	4	0	next
+213	Picture	fixation	1388961	0	1	11623	3	0	next
+214	Picture	44	1400584	0	2	1162	4	0	next
+215	Picture	fixation	1401746	0	2	11291	4	0	next
+216	Picture	fixation	1413037	0	2	997	3	0	next
+217	Picture	fixation	1414034	0	1	11789	2	0	next
+218	Picture	42	1425823	0	1	1328	3	0	next
+219	Picture	fixation	1427151	0	2	10461	3	0	next
+220	Response	200	1430344	-7268	3
+220	Picture	44	1437612	0	1	1328	3	0	next
+221	Picture	fixation	1438940	0	2	11955	4	0	next
+222	Picture	44	1450895	0	2	1163	3	0	next
+223	Picture	fixation	1452058	0	1	10959	2	0	next
+224	Picture	41	1463017	0	1	1328	3	0	next
+225	Picture	fixation	1464345	0	2	10792	5	0	next
+226	Response	200	1467366	-7771	939
+226	Picture	43	1475137	0	3	1291	631	0	next
+227	Picture	fixation	1476428	0	628	11993	630	0	next
+228	Picture	43	1488421	0	2	1163	3	0	next
+229	Picture	fixation	1489584	0	1	11291	2	0	next
+230	Picture	41	1500875	0	1	1328	3	0	next
+231	Picture	fixation	1502203	0	2	10461	4	0	next
+232	Response	200	1505177	-7487	939
+232	Picture	42	1512664	0	2	1328	4	0	next
+233	Picture	fixation	1513992	0	2	11456	5	0	next
+234	Response	200	1519396	-6052	939
+234	Picture	44	1525448	0	3	1164	4	0	next
+235	Picture	fixation	1526612	0	1	11291	2	0	next
+236	Picture	41	1537903	0	1	1328	3	0	next
+237	Picture	fixation	1539231	0	2	10945	942	0	next
+238	Response	200	1543145	-7031	939
+238	Picture	fixation	1550176	0	940	1250	1568	0	next
+239	Picture	fixation	1551426	0	628	11216	631	0	next
+240	Picture	42	1562642	0	3	1330	4	0	next
+241	Picture	fixation	1563972	0	1	11291	2	0	next
+242	Response	200	1568801	-6462	3
+242	Picture	44	1575263	0	1	1328	3	0	next
+243	Picture	fixation	1576591	0	2	11291	4	0	next
+244	Picture	44	1587882	0	2	1328	4	0	next
+245	Picture	fixation	1589210	0	2	11458	3	0	next
+246	Picture	44	1600668	0	1	1328	3	0	next
+247	Picture	fixation	1601996	0	2	10958	5	0	next
+248	Picture	41	1612954	0	3	1163	5	0	next
+249	Picture	fixation	1614117	0	2	11623	4	0	next
+250	Response	200	1619393	-6347	940
+250	Picture	43	1625740	0	2	1163	3	0	next
+251	Picture	fixation	1626903	0	1	11623	2	0	next
+252	Picture	fixation	1638526	0	1	1328	3	0	next
+253	Picture	fixation	1639854	0	2	10294	5	0	next
+254	Picture	fixation	1650148	0	3	1329	5	0	next
+255	Picture	fixation	1651477	0	2	11125	4	0	next
+256	Picture	44	1662602	0	2	2159	3	0	next
+257	Picture	fixation	1664761	0	1	10461	2	0	next
+258	Picture	fixation	1675222	0	1	1328	2	0	next
+259	Picture	fixation	1676550	0	1	11125	2	0	next
+260	Picture	41	1687675	0	1	1328	3	0	next
+261	Picture	fixation	1689003	0	2	11623	4	0	next
+262	Response	200	1692047	-8579	940
+262	Picture	43	1700626	0	2	1163	3	0	next
+263	Picture	fixation	1701789	0	1	11291	2	0	next
+264	Picture	41	1713080	0	1	1162	2	0	next
+265	Picture	fixation	1714242	0	1	11291	3	0	next
+266	Response	200	1717016	-8517	3
+266	Picture	43	1725533	0	2	1328	4	0	next
+267	Picture	fixation	1726861	0	2	10792	5	0	next
+268	Picture	fixation	1737653	0	3	2160	5	0	next
+269	Picture	fixation	1739813	0	2	10295	3	0	next
+270	Picture	43	1750108	0	1	1328	2	0	next
+271	Picture	fixation	1751436	0	1	11291	3	0	next
+272	Picture	42	1762727	0	2	1827	3	0	next
+273	Picture	fixation	1764554	0	1	10626	3	0	next
+274	Response	200	1768288	-6892	2
+274	Picture	43	1775180	0	2	1826	5	0	next
+275	Picture	fixation	1777006	0	3	10628	4	0	next
+276	Picture	fixation	1787634	0	1	1328	3	0	next
+277	Picture	fixation	1788962	0	2	11125	4	0	next
+278	Picture	41	1800087	0	2	1328	4	0	next
+279	Picture	fixation	1801415	0	2	12122	3	0	next
+280	Response	200	1805162	-8375	2
+280	Picture	fixation	1813537	0	1	1328	3	0	next
+281	Picture	fixation	1814865	0	2	10293	5	0	next
+282	Picture	43	1825158	0	3	1330	5	0	next
+283	Picture	fixation	1826488	0	2	11125	4	0	next
+284	Picture	fixation	1837613	0	2	1495	3	0	next
+285	Picture	fixation	1839108	0	1	11124	3	0	next
+286	Picture	42	1850232	0	2	1661	3	0	next
+287	Picture	fixation	1851893	0	1	10793	2	0	next
+288	Response	200	1855633	-7053	2
+288	Picture	44	1862686	0	1	2158	3	0	next
+289	Picture	fixation	1864844	0	2	10461	4	0	next
+290	Picture	43	1875305	0	2	1162	4	0	next
+291	Picture	fixation	1876467	0	2	167	3	0	next
