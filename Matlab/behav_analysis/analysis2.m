@@ -1,4 +1,4 @@
-function behavior = analysis2(varargin)
+function analysis2(varargin)
 % This script analyzes the log-files for individual subjects and individual runs
 % Users should copy the edit_vars file to their own directory and select it after typing
 % analysis in the matlab window.  
@@ -17,8 +17,8 @@ function behavior = analysis2(varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 switch nargin,
     case 0   % choose edit_vars with gui
-        [hdrName, hdrPath]=uigetfile('*.m', 'Select edit_vars file containing user specified variables.');
-        [dummy, hdrName, hdrExt] = fileparts(hdrName);
+        [hdrName, hdrPath] = uigetfile('*.m', 'Select edit_vars file containing user specified variables.');
+        [~, hdrName, hdrExt] = fileparts(hdrName);
     case 1   % filename supplied
         [hdrPath, hdrName, hdrExt]=fileparts(varargin{1});
         if isempty(hdrPath), hdrPath=pwd; end;

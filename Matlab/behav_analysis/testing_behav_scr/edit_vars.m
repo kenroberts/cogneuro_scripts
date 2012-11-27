@@ -37,14 +37,14 @@ SubjectID = {'1969'}; % edit the number of subjects
 % (ie are of the type '01Attend_Left1' where 01 is the subject_ID
 % then set use_subjectID to 1.  Otherwise set to zero.
 use_subjectID = 0;
-log_filenames = {'DistractionRSVP1'}; %, 'DistractionRSVP1', 'DistractionRSVP1', 'DistractionRSVP1', ...
-                %};
+log_filenames = {'DistractionRSVP1', 'DistractionRSVP5', 'DistractionRSVP6', 'DistractionRSVP7', ...
+                };
 
 % conditions: which runs are of the same condition, which runs should be averaged together
 % specify last item of each condition
 % e.g. condition = [3, 3] means that the first 3 logfiles belong to the first condition,
 % the second 3 logfiles belong to the second condition
-condition = [1];
+condition = [4];
 name_condition = {'Distraction'};
 
 % detection (Hits, Misses, FA, RT) or discrimination (correct & incorrect responses, RT)

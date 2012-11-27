@@ -22,10 +22,11 @@ num_subjects = length(config.SubjectID); % total number of subjects
 for sn = 1:num_subjects; % all the subjects
 
     % rearrange 'nesting' of responses in cell arrays
+    % so that 'target' is outer, 'condition' is inner
     temp = vertcat(config.response_codes{:});
     config.response_codes = {};
     for i = 1:size(temp, 2);
-        config.response_codes{i} = {temp{:,i}};
+        config.response_codes{i} = temp(:,i)';
     end;
     
     % for each subject, populate target struct with characteristics of
@@ -52,9 +53,7 @@ for sn = 1:num_subjects; % all the subjects
     
     end; % filenames within subjects
 
-    warning('off', 'MATLAB:divideByZero');
     log_runs(targets, ctargets, sn, config);
-    warning('on', 'MATLAB:divideByZero');
     
     % write an entry in the ANOVA tables (across subs, choose xls or txt output)
     % write_anova(targets, ctargets, config.name_condition,
@@ -229,7 +228,7 @@ function log_runs(targets, ctargets, sn, config)
     
         if (any(cstart == nlog)), opf = fopen(out_fn, 'w'); end;
   
-        % then, print header
+        % then, print run header
         fprintf(opf, '\r\n\r\nRun: %02d   Logfile: %s\r\n\r\n', nlog, fn);
         fprintf(opf, '%-20s%-10s%-10s%-12s%-12s%-15s%-12s%-12s\r\n', 'Name', '#targs', ...
         'Correct', 'Incorrect', '% Correct', '% Incorrect', 'Mean RT', 'StdDev RT');
@@ -238,7 +237,7 @@ function log_runs(targets, ctargets, sn, config)
         print_record(opf, ctargets, nlog);
         
         % if end of condition, summarize the condition, and print the 
-        if (any(cstart == nlog)), 
+        if (any(cend == nlog)), 
             fprintf(opf, '\r\n\r\nCondition: %02d   %s\r\n\r\n', ncond, config.name_condition{ncond});
             fprintf(opf, '%-20s%-10s%-10s%-12s%-12s%-15s%-12s%-12s\r\n', 'Name', '#targs', ...
         'Correct', 'Incorrect', '% Correct', '% Incorrect', 'Mean RT', 'StdDev RT');
@@ -256,11 +255,12 @@ return;
 function [anova_out] = print_record(opf, targets, nlog)
     anova_out = {'','',''}; % rt, er, pc
     for i = 1:length(targets)
-        n = length(cat(2, targets(i).locations{nlog}));
+        n = length(cat(1, targets(i).locations{nlog}));
         if n > 0
             cor = length(strfind(cat(2, targets(i).scores{nlog}), 'C')); 
             icor = length(strfind(cat(2, targets(i).scores{nlog}), 'I'));
-            rts = targets(i).RTs{nlog}; rts = rts(cat(2, targets(i).scores{nlog}) == 'C'); % only use corr RTs
+            rts = cat(2, targets(i).RTs{nlog}); 
+            rts = rts(cat(2, targets(i).scores{nlog}) == 'C'); % only use corr RTs
             fprintf(opf, '%-20s%-10d%-10d%-12d', targets(i).name, n, cor, icor);
             fprintf(opf, '%-12.2f%-15.2f%-12.2f%-12.2f\r\n', 100*(cor/n), 100*(icor/n), mean(rts), std(rts));
             anova_out{1} = sprintf('%s\t%4.2f\t', anova_out{1}, mean(rts));
