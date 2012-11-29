@@ -27,7 +27,7 @@ global root_dir...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User SHOULD EDIT these %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the root directory of the experiment
-root_dir = 'g:\Programs\behav_analysis\testing_behav_scr\logfiles_from_elise';
+root_dir = 'c:\users\kcr2\desktop\cogneuro_scripts\MATLAB\behav_analysis\testing_behav_scr\logfiles_from_elise';
 
 % SubjectID field, can be any string (a number or a name, or a code word)
 SubjectID = {'1969'}; % edit the number of subjects

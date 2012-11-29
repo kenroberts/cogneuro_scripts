@@ -37,7 +37,8 @@ for sn = 1:num_subjects; % all the subjects
       
         % create lfs from file
         lfs = read_logfile(get_logfile_name(config, sn, nlog));
-
+        lfs.filename = get_logfile_name(config, sn, nlog);
+        
         % count the number of any_code
         lfs2 = filter_lfs(lfs, 'include', unique(config.any_code));
         fprintf('Number of targets found: %d\n', length(lfs2.code));
@@ -156,7 +157,7 @@ time_mask = double(time_diff ~= 0); % useful for mapping targs to resp with a mu
 % resp_mat = targ_locs(resp_mat);
 
 % TODO: insert detailed log-by-log based graphical reporting
-% TODO: insert detailed reporting in logfile ...
+
 
 % go through targets and fill 
 %   RT{cond} = [450, 430, ...] and scores{cond} =
@@ -173,10 +174,38 @@ for i = 1:length(targets)
     scores(corri) = 'C';
     scores(icorri) = 'I';
    
+    % fill in struct for that target
     targi_locs = find(targi_mask);
     targets(i).RTs{nlog} = rt_by_targ(targi_locs);
     targets(i).scores{nlog} = scores(targi_locs);
     targets(i).locations{nlog} = targ_locs(targi_locs); % find locs ref to logfile line
+end;
+
+% TODO: insert detailed reporting in logfile ...
+% want to add an extra column in logfile, where all targets have row number
+% of matching response, and vice versa
+rewrite_logfile = 1;
+if rewrite_logfile
+    score_info = repmat('-', length(lfs.code), 1);
+    score_line = zeros(size(score_info));
+    
+    score_info(targ_locs) = scores;
+    score_line(targ_locs) = resp_locs' * time_mask;
+    score_line(resp_locs) = time_mask * targ_locs;
+    score_line(score_line ~= 0) = score_line(score_line ~=0) + length(lfs.header);
+    score_line = cellstr(num2str(score_line));
+    
+    % attach to lfs and write
+    lfs.scores = cellstr(score_info);
+    lfs.colnames{length(lfs.colnames)+1} = 'Scores';
+    lfs.match = score_line;
+    lfs.colnames{length(lfs.colnames)+1} = 'Match';
+   
+    out_fn = strrep(lfs.filename, '.log', '_scored.log');
+    if exist(out_fn, 'file')
+        delete(out_fn);
+    end;
+    write_logfile(lfs, strrep(lfs.filename, '.log', '_scored.log'));
 end;
 
 % check to see if any targets were scored twice.

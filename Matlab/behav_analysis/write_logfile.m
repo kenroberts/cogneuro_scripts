@@ -31,6 +31,7 @@ if nargin < 2
         return;
     end;
     filename = [pathname, filename];
+
 else
     lfs = varargin{1};
     [pathname, f1, f2] = fileparts(varargin{2});
@@ -44,6 +45,7 @@ else
     else
         filename = [pwd, filesep, filename];
     end;
+    
 end;
 
 % name of each error check to apply
@@ -88,7 +90,13 @@ catch
 end;
     
 % (Presentation-specific) write header, first redoing the end-1 line to hold the colnames
-lfs.header{end-1} = deblank(sprintf('%s\t', char(lfs.colnames)'));
+
+colnames = '';
+for j = 1:length(lfs.colnames)
+    colnames = sprintf('%s%s\t', colnames, lfs.colnames{j});
+end;
+lfs.header{end-1} = colnames;
+
 for j = 1:length(lfs.header)
     fprintf(fid, '%s\r\n', lfs.header{j});
 end;

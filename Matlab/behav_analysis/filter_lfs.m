@@ -73,8 +73,11 @@ end;
     
 % build the struct based on the predetermined indices
 hfields = setdiff(fieldnames(lfs), {'header', 'colnames', 'footer'});
+nind = length(lfs.code);
 for i = 1:length(hfields)
-    lfs.(hfields{i}) = subsref(lfs.(hfields{i}), struct('type', {'()'}, 'subs', {{ind}}));
+    if iscell(lfs.(hfields{i})) && length(lfs.(hfields{i})) == nind
+        lfs.(hfields{i}) = subsref(lfs.(hfields{i}), struct('type', {'()'}, 'subs', {{ind}}));
+    end;
 end;
 
 % lfs.trial   = lfs.trial(ind);

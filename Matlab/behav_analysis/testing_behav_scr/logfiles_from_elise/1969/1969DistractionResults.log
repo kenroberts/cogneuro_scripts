@@ -8,9 +8,33 @@ Target              126       80        0           63.49       0.00           5
 
 
 
+Run: 02   Logfile: DistractionRSVP5
+
+Name                #targs    Correct   Incorrect   % Correct   % Incorrect    Mean RT     StdDev RT   
+Target              136       82        0           60.29       0.00           531.00      153.52      
+
+
+
+
+Run: 03   Logfile: DistractionRSVP6
+
+Name                #targs    Correct   Incorrect   % Correct   % Incorrect    Mean RT     StdDev RT   
+Target              120       75        0           62.50       0.00           513.31      169.35      
+
+
+
+
+Run: 04   Logfile: DistractionRSVP7
+
+Name                #targs    Correct   Incorrect   % Correct   % Incorrect    Mean RT     StdDev RT   
+Target              148       88        0           59.46       0.00           540.52      173.08      
+
+
+
+
 Condition: 01   Distraction
 
 Name                #targs    Correct   Incorrect   % Correct   % Incorrect    Mean RT     StdDev RT   
-Target              126       80        0           63.49       0.00           555.50      178.37      
+Target              530       325       0           61.32       0.00           535.53      168.73      
 
 
