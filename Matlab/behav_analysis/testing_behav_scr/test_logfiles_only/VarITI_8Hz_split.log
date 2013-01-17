@@ -1,0 +1,72 @@
+Scenario - 
+Logfile written - 01/14/2013 16:05:50
+
+Trial	Event Type	Code	event(str)	ITI(num)	signal(str)	sigdur(num)	correct(str)	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+1	Response	2						2226	12059	1
+2	Picture	Block 1 SAT	Block 1 SAT					2328	0	1	1333	2	0	1300	other	0
+14	Picture	time15	time15					36317	0	1	166	2	0	150	other	0
+14	Picture	signal	signal					37650	1333	1	1332	3	1300	1300	other	0
+16	Picture	Response Cue	Response Cue					41981	0	1	1333	2	0	1300	other	0
+16	Response	1						45904	3923	1
+18	Picture	correct	correct					50145	1333	1	1333	2	1300	1300	other	0
+19	Picture	;3000;signal;15;hit;		3000	signal	15	hit	51645	0	1	1333	2	0	1300	other	0
+27	Picture	time50	time50					74304	0	1	666	2	0	500	other	0
+27	Picture	nosignal	nosignal					75803	1499	1	1333	2	1300	1300	other	0
+29	Picture	Response Cue	Response Cue					80135	0	1	1333	2	0	1300	other	0
+29	Response	2						83823	3688	1
+31	Picture	correct	correct					88132	1333	1	1333	2	1300	1300	other	0
+32	Picture	;2000;nonsignal;50;CR;		2000	nonsignal	50	CR	89632	0	1	1333	2	0	1300	other	0
+44	Picture	time32	time32					123620	0	1	500	2	0	320	other	0
+44	Picture	nosignal	nosignal					125120	1500	1	1333	2	1300	1300	other	0
+46	Picture	Response Cue	Response Cue					129451	0	2	1333	3	0	1300	other	0
+46	Response	2						132781	3330	1
+48	Picture	correct	correct					137116	1333	1	1332	3	1300	1300	other	0
+49	Picture	;3000;nonsignal;32;CR;		3000	nonsignal	32	CR	138615	0	1	1333	2	0	1300	other	0
+54	Picture	time50	time50					152777	0	1	666	2	0	500	other	0
+54	Picture	signal	signal					154276	1499	1	1333	2	1300	1300	other	0
+56	Picture	Response Cue	Response Cue					158608	0	1	1333	2	0	1300	other	0
+56	Response	1						161659	3051	1
+58	Picture	correct	correct					165939	1333	1	1333	2	1300	1300	other	0
+59	Picture	;1000;signal;50;hit;		1000	signal	50	hit	167439	0	1	1332	3	0	1300	other	0
+64	Picture	time15	time15					181600	0	1	167	2	0	150	other	0
+64	Picture	nosignal	nosignal					182933	1333	1	1333	2	1300	1300	other	0
+66	Picture	Response Cue	Response Cue					187265	0	1	1333	2	0	1300	other	0
+66	Response	2						190219	2954	1
+68	Picture	correct	correct					194429	1333	1	1333	2	1300	1300	other	0
+69	Picture	;1000;nonsignal;15;CR;		1000	nonsignal	15	CR	195929	0	1	1333	2	0	1300	other	0
+77	Picture	time15	time15					218588	0	1	166	2	0	150	other	0
+77	Picture	signal	signal					219921	1333	1	1332	3	1300	1300	other	0
+79	Picture	Response Cue	Response Cue					224252	0	2	1333	3	0	1300	other	0
+79	Response	1						226857	2605	1
+81	Picture	correct	correct					231083	1332	2	1333	3	1300	1300	other	0
+82	Picture	;2000;signal;15;hit;		2000	signal	15	hit	232583	0	1	1333	2	0	1300	other	0
+90	Picture	time32	time32					255242	0	1	500	2	0	320	other	0
+90	Picture	signal	signal					256741	1499	1	1333	2	1300	1300	other	0
+92	Picture	Response Cue	Response Cue					261073	0	1	1333	2	0	1300	other	0
+92	Response	1						263416	2343	1
+94	Picture	correct	correct					267738	1333	1	1332	3	1300	1300	other	0
+95	Picture	;2000;signal;32;hit;		2000	signal	32	hit	269237	0	1	1333	2	0	1300	other	0
+100	Picture	time50	time50					283399	0	1	666	2	0	500	other	0
+100	Picture	signal	signal					284898	1499	1	1333	2	1300	1300	other	0
+102	Picture	Response Cue	Response Cue					289230	0	1	1333	2	0	1300	other	0
+102	Response	2						293015	3785	1
+104	Picture	incorrect	incorrect					295895	0	1	1332	3	0	1300	other	0
+105	Picture	;1000;signal;50;miss;		1000	signal	50	miss	298727	0	1	1333	2	0	1300	other	0
+117	Picture	time32	time32					332715	0	1	500	2	0	320	other	0
+117	Picture	nosignal	nosignal					334215	1500	1	1333	2	1300	1300	other	0
+119	Picture	Response Cue	Response Cue					338547	0	1	1333	2	0	1300	other	0
+119	Response	1						345572	7025	1
+121	Picture	incorrect	incorrect					348543	0	1	1333	2	0	1300	other	0
+122	Picture	;3000;nonsignal;32;FA;		3000	nonsignal	32	FA	351376	0	1	1332	3	0	1300	other	0
+130	Picture	time15	time15					374035	0	1	166	2	0	150	other	0
+130	Picture	nosignal	nosignal					375367	1332	2	1333	3	1300	1300	other	0
+132	Picture	Response Cue	Response Cue					379699	0	1	1333	2	0	1300	other	0
+134	Picture	omit	omit					394861	0	1	1333	2	0	1300	other	0
+135	Picture	;2000;nonsignal;15;omit;		2000	nonsignal	15	omit	397693	0	1	1333	2	0	1300	other	0
+143	Picture	time50	time50					420352	0	1	666	3	0	500	other	0
+143	Picture	signal	signal					421852	1500	1	1332	3	1300	1300	other	0
+145	Picture	Response Cue	Response Cue					426183	0	1	1333	2	0	1300	other	0
+147	Picture	omit	omit					441345	0	1	1333	2	0	1300	other	0
+148	Picture	;2000;signal;50;omit;		2000	signal	50	omit	444177	0	1	1333	2	0	1300	other	0
+151	Quit							453728	1054

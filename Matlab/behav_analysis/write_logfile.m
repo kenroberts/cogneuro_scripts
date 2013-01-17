@@ -170,6 +170,8 @@ function fieldnames = get_fieldnames(colnames)
 
 % field names should be lower case and no spaces
 fieldnames = strrep(lower(colnames), {' '}, {'_'});
+fieldnames = strrep(fieldnames, {'('}, {'_'});
+fieldnames = strrep(fieldnames, {')'}, {'_'});
 
 % they should be unique too (by adding 2, 3, etc onto duplicate names)
 [unique_fields, unique_ind, equiv_ind] = unique(fieldnames);

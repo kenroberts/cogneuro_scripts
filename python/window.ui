@@ -30,6 +30,16 @@
         <string>File</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>File Size</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+      </column>
      </widget>
     </item>
     <item>
@@ -48,16 +58,16 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="cancelButton">
         <property name="text">
-         <string>PushButton</string>
+         <string>Upload All</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="uploadAllButton">
         <property name="text">
-         <string>PushButton</string>
+         <string>Cancel</string>
         </property>
        </widget>
       </item>
