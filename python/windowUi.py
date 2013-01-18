@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'window.ui'
 #
-# Created: Tue Nov  6 11:25:05 2012
+# Created: Thu Jan 17 15:50:23 2013
 #      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,28 +19,24 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
         self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setAutoFillBackground(False)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.verticalLayoutWidget = QtGui.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(-1, -1, 801, 561))
-        self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
-        self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setMargin(0)
+        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.tableWidget = QtGui.QTableWidget(self.verticalLayoutWidget)
-        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
-        self.tableWidget.setColumnCount(4)
-        self.tableWidget.setRowCount(1)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setVerticalHeaderItem(0, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(2, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(3, item)
-        self.verticalLayout.addWidget(self.tableWidget)
+        self.treeWidget = QtGui.QTreeWidget(self.centralwidget)
+        self.treeWidget.setObjectName(_fromUtf8("treeWidget"))
+        self.verticalLayout.addWidget(self.treeWidget)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.cancelButton = QtGui.QPushButton(self.centralwidget)
+        self.cancelButton.setObjectName(_fromUtf8("cancelButton"))
+        self.horizontalLayout.addWidget(self.cancelButton)
+        self.uploadAllButton = QtGui.QPushButton(self.centralwidget)
+        self.uploadAllButton.setObjectName(_fromUtf8("uploadAllButton"))
+        self.horizontalLayout.addWidget(self.uploadAllButton)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -55,15 +51,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        item = self.tableWidget.verticalHeaderItem(0)
-        item.setText(QtGui.QApplication.translate("MainWindow", "New Row", None, QtGui.QApplication.UnicodeUTF8))
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(QtGui.QApplication.translate("MainWindow", "Filename", None, QtGui.QApplication.UnicodeUTF8))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(QtGui.QApplication.translate("MainWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(QtGui.QApplication.translate("MainWindow", "Progress", None, QtGui.QApplication.UnicodeUTF8))
-        item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(QtGui.QApplication.translate("MainWindow", "Status", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeWidget.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Path", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeWidget.headerItem().setText(1, QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeWidget.headerItem().setText(2, QtGui.QApplication.translate("MainWindow", "File Size", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeWidget.headerItem().setText(3, QtGui.QApplication.translate("MainWindow", "Status", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancelButton.setText(QtGui.QApplication.translate("MainWindow", "Upload All", None, QtGui.QApplication.UnicodeUTF8))
+        self.uploadAllButton.setText(QtGui.QApplication.translate("MainWindow", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc

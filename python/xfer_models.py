@@ -17,6 +17,7 @@ class WatchDir(Entity):
     A watched directory
     """
     using_options(tablename='watchDir_table')
+    
     dirPath = Field(Unicode,required=True)
     dateStarted = Field(DateTime,default=None,required=False)
     sendToComputer = Field(Unicode,required=True)
@@ -94,9 +95,16 @@ def main():
     
                      
     saveData()
+
+    num_tasks = TransferTask.query.all()
+    print(class(num_tasks))
+    #num_dirs = WatchDir.query.all().count()
     
-    print('There are %d tasks and %d dirs being watched.' %
-          (len(TransferTask.query().all()), len(DirWatch.query().all())) )
+    # print('There are %d tasks and %d dirs being watched.' %
+    #      (num_tasks, num_dirs ) )
+
+    #for task in TransferTask.query.all():
+    #    print(task)
 
 if __name__ == "__main__":
     main()
