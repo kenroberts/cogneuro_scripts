@@ -5,7 +5,7 @@
 import os,sys
 import resources_rc
 import logging
-import xfer_models
+import models
 
 # Import Qt modules
 from PyQt4 import QtCore,QtGui
@@ -15,7 +15,7 @@ from windowUi import Ui_MainWindow
 
 # Create a class for our main window
 class Main(QtGui.QMainWindow):
-    def __init__(self, task_collection):
+    def __init__(self):
         QtGui.QMainWindow.__init__(self)
         
         # This is always the same
@@ -38,8 +38,10 @@ class Main(QtGui.QMainWindow):
 
     def refresh_treeview(self):
         # query all pending items
-        item=QtGui.QTreeWidgetItem(['c:\whatever', 'test.log', '44kb', 'Pending'])
-        self.ui.treeWidget.addTopLevelItem(item)
+        session = models.getSession()
+        for task in session.query(models.TransferTask).filter(models.TransferTask.fileStatus==1):
+            item=QtGui.QTreeWidgetItem(task.getList())
+            self.ui.treeWidget.addTopLevelItem(item)
 
     def showApplication(self):
         
@@ -72,7 +74,7 @@ class DirWatcher:
         xfer_models.TransferTask(filePath=r'C:\users\kcr2\cogneuro_scripts\python\test_watcher',
                     fileName='1800.cnt',
                     fileSize=12450,
-                    fileStatus='Pending',
+                    fileStatus=1,
                     dateAdded=datetime.utcnow())
         xfer_models.saveData()
         pass
@@ -90,7 +92,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
     app.setApplicationName('AutoXfer App')
 
-    xfer_models.initDB()
+    models.initDB()
 
     window=Main()
     # window.show()
