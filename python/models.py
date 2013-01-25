@@ -51,19 +51,24 @@ class TransferTask(Base):
     id = Column(Integer, primary_key=True)
     filePath = Column(String(200))
     fileName = Column(String(32))
+    filePathHash = Column(Integer)
+    fileNameHash = Column(Integer)
     fileSize = Column(Integer)
     fileStatus = Column(Integer)
     dateAdded = Column(DateTime)
 
     fileStatusEnum = {1: 'Pending', 2: 'Transferred', }
 
-    #def __init__(self, filePath, fileName, fileSize,
-    #             fileStatus, dateAdded):
-    #    self.filePath = filePath
-    #    self.fileName = fileName
-    #    self.fileSize = fileSize
-    #    self.fileStatus = fileStatus
-    #    self.dateAdded = dateAdded
+    def __init__(self, filePath, fileName, fileSize,
+                 fileStatus, dateAdded):
+        self.filePath = filePath
+        self.fileName = fileName
+        self.fileSize = fileSize
+        self.fileStatus = fileStatus
+        self.dateAdded = dateAdded
+        self.filePathHash = hash(filePath)
+        self.fileNameHash = hash(fileName)
+
 
     def getFileSize(self):
         if self.fileSize < 1000:
