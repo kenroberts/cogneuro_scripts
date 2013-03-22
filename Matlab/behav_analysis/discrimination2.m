@@ -54,11 +54,15 @@ for sn = 1:num_subjects; % all the subjects
     
     end; % filenames within subjects
 
-    log_runs(targets, ctargets, sn, config);
+    % summary stats writes stats across conditions.
+    anova_out = summary_stats(targets, ctargets, sn, config);
     
     % write an entry in the ANOVA tables (across subs, choose xls or txt output)
     % write_anova(targets, ctargets, config.name_condition,
     % config.condition, sn);
+    is_first_run = 1 == sn;
+    write_anova_entry(config.root_dir, is_first_run, config.SubjectID{sn}, ...
+        config.name_condition,  targets, ctargets, anova_out);
 
 end; % subject
 
@@ -244,12 +248,15 @@ function ctargets = merge_targets(targets, ctargets, nlog)
     end;
 return;
 
-% log all the runs from a single subject.
-function log_runs(targets, ctargets, sn, config)
-    
+% summarize stats across the runs from a single subject.
+% also, calculate and forward rt,er,pc for anova tables.
+function anova_out = summary_stats(targets, ctargets, sn, config)
     ncond = 1;
     cstart = cumsum([1 config.condition(1:end-1)]);
     cend = cumsum(config.condition);
+    num_targs = length(targets) + length(ctargets);
+    anova_out = cell(length(cstart), num_targs, 3);
+    
     for nlog = 1:length(config.log_filenames)
     
         [out_fn, fn] = fileparts(get_logfile_name(config, sn, nlog));
@@ -271,8 +278,14 @@ function log_runs(targets, ctargets, sn, config)
             fprintf(opf, '%-20s%-10s%-10s%-12s%-12s%-15s%-12s%-12s\r\n', 'Name', '#targs', ...
         'Correct', 'Incorrect', '% Correct', '% Incorrect', 'Mean RT', 'StdDev RT');
              
-            print_record(opf, targets, cstart(ncond):cend(ncond));
-            print_record(opf, ctargets, cstart(ncond):cend(ncond));
+            % I hate cell arrays.
+            temp = print_record(opf, targets, cstart(ncond):cend(ncond));  % rt, pc, er, each a string over targets.
+            temp = vertcat(temp, print_record(opf, ctargets, cstart(ncond):cend(ncond)) );
+            for i = 1:size(temp, 1)
+                for j = 1:size(temp, 2)
+                    anova_out{ncond, i, j} = temp{i, j};
+                end;
+            end;
             
             ncond = ncond+1; 
             fclose(opf); 
@@ -280,9 +293,10 @@ function log_runs(targets, ctargets, sn, config)
     end;
 return;
 
+% print_record is used in log_runs
 % prints a single record, collates across possible range in nlog
 function [anova_out] = print_record(opf, targets, nlog)
-    anova_out = {'','',''}; % rt, er, pc
+    anova_out = cell(length(targets), 3); % rt, er, pc
     for i = 1:length(targets)
         n = length(cat(1, targets(i).locations{nlog}));
         if n > 0
@@ -292,13 +306,15 @@ function [anova_out] = print_record(opf, targets, nlog)
             rts = rts(cat(2, targets(i).scores{nlog}) == 'C'); % only use corr RTs
             fprintf(opf, '%-20s%-10d%-10d%-12d', targets(i).name, n, cor, icor);
             fprintf(opf, '%-12.2f%-15.2f%-12.2f%-12.2f\r\n', 100*(cor/n), 100*(icor/n), mean(rts), std(rts));
-            anova_out{1} = sprintf('%s\t%4.2f\t', anova_out{1}, mean(rts));
-            anova_out{2} = sprintf('%s\t%4.2f\t', anova_out{2}, 100*(icor/n));
-            anova_out{3} = sprintf('%s\t%4.2f\t', anova_out{3}, 100*(cor/n));
+            anova_out{i, 1} = mean(rts); 
+            anova_out{i, 2} = 100*(icor/n); 
+            anova_out{i, 3} = 100*(cor/n);
+            
         else
-            anova_out{1} = sprintf('%s\tNaN\t', anova_out{1});
-            anova_out{2} = sprintf('%s\tNaN\t', anova_out{2});
-            anova_out{3} = sprintf('%s\tNaN\t', anova_out{3});
+            anova_out{i, 1} = NaN; 
+            anova_out{i, 2} = NaN; 
+            anova_out{i, 3} = NaN;
+            
         end;
     end;
     fprintf(opf, '\r\n');
@@ -306,8 +322,58 @@ function [anova_out] = print_record(opf, targets, nlog)
 return;
 
 % prints out reports
-% reportlevel = 1 -> ANOVA tables, subject summary
-% reportlevel = 2 -> above, plus per run summary
-% reportlevel = 3 -> above, plus new marked-up logfiles
-% reportlevel = 4 -> run-by-run graphical summary (like CIRC)
+function write_anova_entry(root_dir, is_first_run, subj_id, cond_names, targets, ctargets, anova_out)
+    % anova out is (ncond x num_targs x 3), (3rd dim is rt, er, pc) 
+    ncond = size(anova_out, 1);
+    ntarg = size(anova_out, 2);
+    opf = zeros(3, 1);
+    
+    for cond = 1:ncond
+        
+        % write the target names if it is the first run.
+        if is_first_run
+            opf(1) = fopen(fullfile(root_dir, sprintf('anova_RT_%s.log', cond_names{cond})), 'w');
+            opf(2) = fopen(fullfile(root_dir, sprintf('anova_ER_%s.log', cond_names{cond})), 'w');
+            opf(3) = fopen(fullfile(root_dir, sprintf('anova_PC_%s.log', cond_names{cond})), 'w');
+            
+            for j = 1:3
+                fprintf(opf(j), '\t');
+            end;
+            for i = 1:length(targets) % targ names
+                for j = 1:3
+                    fprintf(opf(j), '%s\t', targets(i).name);
+                end;
+            end;
+            for i = 1:length(ctargets) % comp. targ
+                for j = 1:3
+                    fprintf(opf(j), '%s\t', ctargets(i).name);
+                end;
+            end;
+            for j = 1:3
+                fprintf(opf(j), '\r\n');
+            end;
+        else
+            opf(1) = fopen(fullfile(root_dir, sprintf('anova_RT_%s.log', cond_names{cond})), 'a');
+            opf(2) = fopen(fullfile(root_dir, sprintf('anova_ER_%s.log', cond_names{cond})), 'a');
+            opf(3) = fopen(fullfile(root_dir, sprintf('anova_PC_%s.log', cond_names{cond})), 'a');
+        end;
+        
+        for j = 1:3     % sub name
+                fprintf(opf(j), '%s\t', subj_id);
+        end;
+        
+        % print out variables
+        for i = 1:ntarg
+            for j = 1:3
+                fprintf(opf(j), '%f\t', anova_out{cond, i, j});
+            end;
+        end;
+        
+        % close all
+        for j = 1:3
+            fprintf(opf(j), '\r\n');
+            fclose(opf(j));
+        end;
+    end;
+return;
 
