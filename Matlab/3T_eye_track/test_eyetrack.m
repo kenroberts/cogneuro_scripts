@@ -3,7 +3,7 @@
 
 
 
-if (1)
+if (0)
     % data from Ruth's SaccEye experiment
     % 35104 has really nice saccade data
     % 35124 looks pretty bad, in this file the time rolls over around line
