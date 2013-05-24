@@ -33,7 +33,7 @@ function raw_data = read_xls_file(input_filename)
 %       3- too great a z-score difference on pos
 %       4- non-monotonic increase of time
 
-    [xl_num, xl_str] = xlsread(input_filename);
+    [xl_num, xl_str, xl_raw] = xlsread(input_filename);
     
     % sometimes acquisition stutters and records things twice, shifting
     % over all of the columns.  Do not use these points.
@@ -65,7 +65,7 @@ function raw_data = read_xls_file(input_filename)
     events.row = choose_ind;
     events.time = xl_num(choose_ind, 2);
     events.code = strtrim(cellstr(num2str(xl_num(choose_ind, 3))));
-    temp_str = xl_str(choose_ind, 3);
+    temp_str = xl_raw(choose_ind, 3);
     temp_isnan = isnan(xl_num(choose_ind, 3));
     events.code(temp_isnan)= temp_str(temp_isnan);
     

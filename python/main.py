@@ -67,8 +67,8 @@ class DirWatcher:
         self.fs_watcher = None
         # who to notify
 
-    def print_signal(self, msg):
-        logging.info(msg)
+    def log_dirchange(self, msg):
+        logging.info('log dirchange on ' + msg)
 
     def add_to_queue(self, filepath):
         xfer_models.TransferTask(filePath=r'C:\users\kcr2\cogneuro_scripts\python\test_watcher',
@@ -81,9 +81,10 @@ class DirWatcher:
 
     def add_directory(self, dirname):
         if self.fs_watcher == None:
-            fs_watcher = QtCore.QFileSystemWatcher()
-            fs_watcher.directoryChanged.connect(self.print_signal)
-        fs_watcher.addPath(dirname)
+            self.fs_watcher = QtCore.QFileSystemWatcher()
+            self.fs_watcher.directoryChanged.connect(self.log_dirchange)
+        logging.info('watching ' + dirname)
+        self.fs_watcher.addPath(dirname)
         
 
 def main():
@@ -100,7 +101,8 @@ def main():
     # try out watching a directory
     dir_watcher = DirWatcher()
     
-    the_dir = r'C:\Users\kcr2\Desktop\cogneuro_scripts\python\test_watcher'
+    # the_dir = r'C:\Users\kcr2\Desktop\cogneuro_scripts\python\test_watcher'
+    the_dir = r'test_watcher'
     dir_watcher.add_directory(the_dir)
     
     # It's exec_ because exec is a reserved word in Python

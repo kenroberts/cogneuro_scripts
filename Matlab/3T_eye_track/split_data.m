@@ -183,50 +183,6 @@ end;
 return;
 
 
-% split data by times in seg_starts, seg_ends
-% which are vectors containing times 
-% (this function will only work properly when the 
-% time values in a run increase monotonically.  That is why it is
-% deprecated in favor of splitting on row values
-function runs = split_on_time(data, seg_starts, seg_ends)
-
-% HARD-CODED: minimum length in seconds
-MIN_LENGTH_TIME = 10;
-nskip = 0;
-
-for i = 1:length(seg_starts)
-    
-    if seg_ends(i)-seg_starts(i) < MIN_LENGTH_TIME
-        warning('Skipping run of only %f seconds.', seg_ends(i)-seg_starts(i));
-        nskip = nskip+1;
-        continue
-    end;
-    
-    choose_ind = find(data.runs{1}.events.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.runs{1}.events.time >= seg_ends(i)));
-    ev = struct('row', data.runs{1}.events.row(choose_ind), ...
-                'time', data.runs{1}.events.time(choose_ind), ...
-                'code', { data.runs{1}.events.code(choose_ind) });
-            
-    choose_ind = find(data.runs{1}.pos.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.runs{1}.pos.time >= seg_ends(i)));
-    pos = struct('row', data.runs{1}.pos.row(choose_ind), ...
-                'time', data.runs{1}.pos.time(choose_ind), ...
-                'xpos', data.runs{1}.pos.xpos(choose_ind), ...
-                'ypos', data.runs{1}.pos.ypos(choose_ind), ...
-                'paspect', data.runs{1}.pos.pwidth(choose_ind), ...
-                'pwidth', data.runs{1}.pos.paspect(choose_ind) );
-    
-    choose_ind = find(data.runs{1}.nodata.time >= seg_starts(i));
-    choose_ind = setdiff(choose_ind, find(data.runs{1}.nodata.time >= seg_ends(i)));
-    nodata = struct('row', data.runs{1}.nodata.row(choose_ind), ...
-                'time', data.runs{1}.nodata.time(choose_ind) );       
-     
-    runs{i-nskip} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
-end;
-
-return;
-
 % split data by rows in seg_starts, seg_ends
 % which are vectors containing row numbers 
 function runs = split_on_rows(data, seg_starts, seg_ends)
@@ -234,6 +190,8 @@ function runs = split_on_rows(data, seg_starts, seg_ends)
 % HARD-CODED: minimum length in rows (300 ~= 10s)
 MIN_LENGTH_ROW = 300;
 nskip = 0;
+%runs = cell(length(seg_starts));
+fprintf('%d\n', length(seg_starts));
 
 for i = 1:length(seg_starts)
     if seg_ends(i)-seg_starts(i) < MIN_LENGTH_ROW
@@ -254,8 +212,8 @@ for i = 1:length(seg_starts)
                 'time', data.runs{1}.pos.time(choose_ind), ...
                 'xpos', data.runs{1}.pos.xpos(choose_ind), ...
                 'ypos', data.runs{1}.pos.ypos(choose_ind), ...
-                'paspect', data.runs{1}.pos.pwidth(choose_ind), ...
-                'pwidth', data.runs{1}.pos.paspect(choose_ind) );
+                'paspect', data.runs{1}.pos.paspect(choose_ind), ...
+                'pwidth', data.runs{1}.pos.pwidth(choose_ind) );
     
     choose_ind = find(data.runs{1}.nodata.row >= seg_starts(i));
     choose_ind = setdiff(choose_ind, find(data.runs{1}.nodata.row >= seg_ends(i)));
@@ -266,4 +224,6 @@ for i = 1:length(seg_starts)
             
     runs{i-nskip} = struct('events', ev, 'nodata', nodata, 'pos', pos); 
 end;
+
+
 return;

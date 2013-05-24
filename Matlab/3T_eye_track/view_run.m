@@ -30,7 +30,7 @@ function varargout = view_run(varargin)
 
 % Edit the above text to modify the response to help view_run
 
-% Last Modified by GUIDE v2.5 28-Oct-2010 19:40:52
+% Last Modified by GUIDE v2.5 23-May-2013 11:40:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -135,23 +135,24 @@ function update_slider(handles)
 %     
 %     set(handles.slider1, 'Min', sl_min, 'Max', sl_max, 'SliderStep', [curr_scale, curr_scale*5], 'Value', value);
 
-% redraw the plot
+% redraw the upper and lower graphs (upper = events, xpos, ypos, lower =
+% pupil width and aspect) 
 function update_axis(handles)
     data = handles.data{get(handles.popupmenu1, 'Value')}.runs{get(handles.popupmenu2, 'Value')};
     detrend_check = [get(handles.checkbox6, 'Value'), get(handles.checkbox7, 'Value') ];
     
+    % absolute start and end times of data
     start_time = min(data.pos.time(1), data.events.time(1));
     end_time = max(data.pos.time(end), data.events.time(end));
     
     scales = {1, 5, 10, 30, 60, 300}; % scale_str = '1s|5s|10s|30s|1m|5m';
     curr_scale = scales{get(handles.popupmenu3, 'Value')};
     
-    % set the boundaries for plotting
-     plot_start = (end_time-start_time-curr_scale) * get(handles.slider1, 'Value');
-     plot_start = plot_start+start_time; plot_end = plot_start + curr_scale;
-    %plot_start = get(handles.slider1, 'Value');
+    % set the boundaries for plotting (time-wise)
+    plot_start = (end_time-start_time-curr_scale) * get(handles.slider1, 'Value');
+    plot_start = plot_start+start_time; plot_end = plot_start + curr_scale;
     
-    plot_mask = data.pos.time > plot_start & data.pos.time < plot_end;
+    plot_mask = find(data.pos.time > plot_start & data.pos.time < plot_end);
     axes(handles.axes1);
     hold off;
     if get(handles.checkbox1, 'Value') == 1
@@ -172,27 +173,65 @@ function update_axis(handles)
         end;
          hold on;
     end;
+    
+    % TODO: unlock y-axis, or lock from -1..2
     ax1 = axis(handles.axes1); ax1(3:4) = [0 1]; axis(ax1); % set y-scale to 0-1
     
-    % plot pupil data
+    % plot pupil width (with different colors if there is 'class'
+    % indicating blinks/gaps)
     axes(handles.axes2);
     hold off;
     if get(handles.checkbox3, 'Value') == 1
-        plot(data.pos.time(plot_mask), data.pos.pwidth(plot_mask), 'b'); 
-        hold on;
+        if isfield(data.pos, 'class')
+            good_class = round(mean(data.pos.class));
+            start_ind = find([1; data.pos.class(2:end) ~= data.pos.class(1:end-1); 1]);
+            start_ind = [plot_mask(1); intersect(start_ind, plot_mask); plot_mask(end)];
+            for j = 1:length(start_ind)-1
+                if data.pos.class(start_ind(j)) == good_class
+                    plot(data.pos.time(start_ind(j):start_ind(j+1)), ...
+                        data.pos.pwidth(start_ind(j):start_ind(j+1)), 'g');
+                    hold on;
+                else
+                    plot(data.pos.time(start_ind(j):start_ind(j+1)), ...
+                        data.pos.pwidth(start_ind(j):start_ind(j+1)), 'k');
+                    hold on;
+                end;
+            end;
+        else
+            plot(data.pos.time(plot_mask), data.pos.pwidth(plot_mask), 'b'); 
+        end;
     end;
+    
+    % plot pupil aspect ratio
     if get(handles.checkbox4, 'Value') == 1
          plot(data.pos.time(plot_mask), data.pos.paspect(plot_mask), 'r');
          hold on;
     end;
     ax2 = axis(handles.axes2); ax2(3:4) = [0 1]; axis(ax2); % set y-scale to 0-1
     
+    % plot velocity
+    
+    
     % plot events
+    axes(handles.axes1);
+    uniq_ev = unique(data.events.code);
+    color_order = get(gca, 'ColorOrder');
+    
     plot_ind = [find(data.events.time > plot_start, 1) find(data.events.time < plot_end, 1, 'last')];
     if numel(plot_ind) > 1 && get(handles.checkbox5, 'Value') == 1
-        line_x = repmat(data.events.time(plot_ind(1):plot_ind(2))', 2, 1);
-        line_y = repmat(ax1(3:4)', 1, plot_ind(2)-plot_ind(1)+1);
-        axes(handles.axes1); line(line_x, line_y);
+        %line_x = repmat(data.events.time(plot_ind(1):plot_ind(2))', 2, 1);
+        %line_y = repmat(ax1(3:4)', 1, plot_ind(2)-plot_ind(1)+1);
+        
+        % lh = line(line_x, line_y);
+        for j = plot_ind(1):plot_ind(2)
+            %set(lh(j), 'Color', color_order(mod(j, size(color_order, 1)), :));
+            uniq_ev_num = find(strcmp(data.events.code(j), uniq_ev));
+            curr_color = color_order(mod(uniq_ev_num, size(color_order, 1))+1, :);
+            th = text(data.events.time(j), 1, data.events.code(j));
+            set(th,  'Color', curr_color );
+            th = line([data.events.time(j); data.events.time(j)], [0, 1]);
+            set(th,  'Color', curr_color );
+        end;
     end;
     
 % --- Outputs from this function are returned to the command line.
@@ -323,6 +362,7 @@ function File_menu_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in checkbox6.
+% SPLINE DETREND X
 function checkbox6_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -332,6 +372,7 @@ function checkbox6_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in checkbox7.
+% SPLINE DETREND Y
 function checkbox7_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -339,7 +380,7 @@ function checkbox7_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox7
 
-
+% UNLOCK AXES
 % --- Executes on button press in checkbox8.
 function checkbox8_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox8 (see GCBO)
@@ -347,3 +388,12 @@ function checkbox8_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox8
+
+% X VELOCITY
+% --- Executes on button press in checkbox9.
+function checkbox9_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox9

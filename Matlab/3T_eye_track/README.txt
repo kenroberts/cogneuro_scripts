@@ -15,12 +15,13 @@ subject_data{}
             row, time
         -> pos()     // lines marked 10 (position data)
             row, time, xpos, ypos, pwidth, paspect
-        -> header
-            -> lines{}
+        -> header{}
+            -> lines from header
     -> history (not impl)
         -> commands{}
     -> cache (not impl)
 
+want to be able to "reach" in to query almost anything and aggregate
 
 
 

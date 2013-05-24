@@ -1,8 +1,8 @@
-function [pst_fig, avg_fig] = make_pst(clean_data, the_code)
+function [pst_fig, avg_fig] = make_pst(clean_data, evt_code)
 % make_pst(clean_data, evt_code)
 
 % hard-code a peri-stimulus interval in ms:
-PST_INTERVAL = [-0.2:0.017:0.5]
+PST_INTERVAL = [-0.2:0.017:0.5];
 
     pst_fig = figure;
     avg_fig = figure;
@@ -11,17 +11,21 @@ PST_INTERVAL = [-0.2:0.017:0.5]
     for sub=1:length(clean_data)
         
         % clear out pst
-        pst = zeros(0, length(peri_code_pts));
+        pst = zeros(0, length(PST_INTERVAL));
         
         for run = 1:length(clean_data{sub})
-            events = clean_data{sub}{run}.events;
-            pos = clean_data{sub}{run}.pos;
-            time_lock = events.evt_row(events.evt_code == the_code); 
-            pst_run = zeros(length(time_lock), length(peri_code_pts));
+            events = clean_data{sub}.runs{run}.events;
+            pos = clean_data{sub}.runs{run}.pos;
+            
+            time_lock = events.time(strcmp(evt_code, events.code)); 
+            pst_run = zeros(length(time_lock), length(PST_INTERVAL));
+            % Syntax for intperp1: Vq = interp1(X,V,Xq)
             for k = 1:length(time_lock)
-                tl_ind = find(pos.pos_row > time_lock(k), 1);
-                pst_run(k,:) = pos.xpos(tl_ind + peri_code_pts);
+                %tl_ind = find(pos.pos_row > time_lock(k), 1);
+                %pst_run(k,:) = pos.xpos(tl_ind + peri_code_pts);
+                pst_run(k,:) = interp1(pos.time, pos.xpos, time_lock(k)+PST_INTERVAL);
             end;
+            
             pst = cat(1, pst, pst_run);
         end;
         
@@ -37,7 +41,7 @@ PST_INTERVAL = [-0.2:0.017:0.5]
         colormap(gray);
         
         % plot line
-        start = find(peri_code_pts > 0, 1)-1;
+        start = find(PST_INTERVAL > 0, 1)-1;
         h = line([start, start], [1, size(pst, 1)]);
         set(h, 'Color', [1 0 0]);
         
