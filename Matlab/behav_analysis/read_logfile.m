@@ -139,6 +139,37 @@ for i = 1:length(fieldnames)
     lfs.(fieldnames{i}) = big_cell(:, i);
 end;
 
+% parse any port conflicts from footer
+lfs.conflicts = parse_port_conflicts(lfs.footer);
+
+return;
+
+
+% subfunction to parse port conflicts
+% takes in footer, looks for lines like:
+% -> The following output port codes were not sent because of a conflict on the port.
+% -> Port	Code	Time(ms)
+% -> 1	41	7166
+function conflicts = parse_port_conflicts(footer)
+    conflicts = struct('port', {}, 'code', {}, 'time', {});
+    port_start = find(strcmp(footer, ...
+        'The following output port codes were not sent because of a conflict on the port.'));
+   
+    if isempty(port_start)    
+        return;
+    end;
+    
+    curr_line = port_start + 2;
+    while curr_line <= length(footer)
+        try
+            [a, b, c] = strread(footer{curr_line}, '%d%d%f');
+            conflicts(curr_line-port_start-1) = struct('port', {a}, 'code', {b}, 'time', {c});
+            curr_line = curr_line+1;
+        catch 
+            break
+        end;
+    end;
+  
 return;
 
 % subfunction to determine whether a line is the "descriptor line,"

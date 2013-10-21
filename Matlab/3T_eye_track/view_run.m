@@ -65,19 +65,23 @@ handles.output = hObject;
 
 % easy testing with dummy data
 if length(varargin) == 0
-    input_files = {'131.xlsx', '135.xlsx'};
-    clean_data = read_data(input_files);
-    %clean_data = make_clean_data(input_files, raw_data);
-    varargin = {'filenames', input_files, 'data', clean_data};
-end;
-
-% handle command line input:
-% expect 'filenames' filenames 'data' data
-for i = 1:2:length(varargin)
-    if ischar(varargin{i}) && length(varargin) >= i+1
-        handles = setfield(handles, varargin{i}, varargin{i+1});
-    else
-        error('Bad command line input.  Please see help.');
+    handles.filenames = {'131.xlsx', '135.xlsx'};
+    handles.data = read_data(input_files);
+   
+elseif length(varargin) == 1
+    handles.data = varargin{1};
+    f{1:length(clean_data)} = handles.data{:}.filename;
+    handles.filenames = f;
+    
+else
+    % handle command line input:
+    % expect 'filenames' filenames 'data' data
+    for i = 1:2:length(varargin)
+        if ischar(varargin{i}) && length(varargin) >= i+1
+            handles = setfield(handles, varargin{i}, varargin{i+1});
+        else
+            error('Bad command line input.  Please see help.');
+        end;
     end;
 end;
 

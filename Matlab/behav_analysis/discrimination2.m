@@ -94,8 +94,13 @@ function [targets, ctargets] = make_targets(config)
 targets = struct('name', config.target_names, 'codes', config.target_codes, ...
     'corr_response', config.response_codes, 'RT_window', [config.min_RT, config.max_RT], ...
     'RTs', {{}}, 'scores', {{}}, 'locations', {{}});
-ctargets = struct('name', config.compound_names, 'subtargets', config.compound_targets, ...
-    'RTs', {{}}, 'scores', {{}}, 'locations', {{}});
+
+if isfield(config, 'compound_names') && ~isempty(config.compound_names)
+    ctargets = struct('name', config.compound_names, 'subtargets', config.compound_targets, ...
+        'RTs', {{}}, 'scores', {{}}, 'locations', {{}});
+else
+    ctargets = [];
+end;
 
 return;
 
@@ -185,38 +190,46 @@ for i = 1:length(targets)
     targets(i).locations{nlog} = targ_locs(targi_locs); % find locs ref to logfile line
 end;
 
-% TODO: insert detailed reporting in logfile ...
-% want to add an extra column in logfile, where all targets have row number
-% of matching response, and vice versa
-rewrite_logfile = 1;
-if rewrite_logfile
-    score_info = repmat('-', length(lfs.code), 1);
-    score_line = zeros(size(score_info));
-    
-    score_info(targ_locs) = scores;
-    score_line(targ_locs) = resp_locs' * time_mask;
-    score_line(resp_locs) = time_mask * targ_locs;
-    score_line(score_line ~= 0) = score_line(score_line ~=0) + length(lfs.header);
-    score_line = cellstr(num2str(score_line));
-    
-    % attach to lfs and write
-    lfs.scores = cellstr(score_info);
-    lfs.colnames{length(lfs.colnames)+1} = 'Scores';
-    lfs.match = score_line;
-    lfs.colnames{length(lfs.colnames)+1} = 'Match';
-   
-    out_fn = strrep(lfs.filename, '.log', '_scored.log');
-    if exist(out_fn, 'file')
-        delete(out_fn);
-    end;
-    write_logfile(lfs, strrep(lfs.filename, '.log', '_scored.log'));
+% reporting
+if 1
+    rewrite_logfile(lfs, scores, resp_locs, time_mask, targ_locs);
 end;
+
 
 % check to see if any targets were scored twice.
 if any(cum_targs > 1)
     disp('Warning: some targets were scored twice.');
     disp('Compound target statistics may double count some targets.');
 end;
+
+return;
+
+
+% TODO: insert detailed reporting in logfile ...
+% want to add an extra column in logfile, where all targets have row number
+% of matching response, and vice versa
+function lfs = rewrite_logfile(lfs, scores, resp_locs, time_mask, targ_locs)
+
+score_info = repmat('-', length(lfs.code), 1);
+score_line = zeros(size(score_info));
+
+score_info(targ_locs) = scores;
+score_line(targ_locs) = resp_locs' * time_mask;
+score_line(resp_locs) = time_mask * targ_locs;
+score_line(score_line ~= 0) = score_line(score_line ~=0) + length(lfs.header);
+score_line = cellstr(num2str(score_line));
+
+% attach to lfs and write
+lfs.scores = cellstr(score_info);
+lfs.colnames{length(lfs.colnames)+1} = 'Scores';
+lfs.match = score_line;
+lfs.colnames{length(lfs.colnames)+1} = 'Match';
+
+out_fn = strrep(lfs.filename, '.log', '_scored.log');
+if exist(out_fn, 'file')
+    delete(out_fn);
+end;
+write_logfile(lfs, strrep(lfs.filename, '.log', '_scored.log'));
 
 return;
 

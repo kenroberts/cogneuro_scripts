@@ -49,7 +49,7 @@ if (check_flags(1))
             opf = fopen(filename, 'r');
             fclose(opf);
          catch
-            fprintf('Could not find the file %s', filename);   
+            fprintf('Could not find the file %s\n', filename);   
          end
       end
    end

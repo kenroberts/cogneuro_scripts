@@ -60,4 +60,6 @@ switch task
         detection2(config);
     case 2
         discrimination2(config);
+    case 3
+        recode_eventlist(config);
 end;
